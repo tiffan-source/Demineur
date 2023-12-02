@@ -13,6 +13,8 @@ void menu(){
 
     displayMenu();
 
+    // write it better withou scanf
+
     scanf("%d", &select);
 
     switch (select)

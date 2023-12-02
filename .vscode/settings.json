@@ -3,6 +3,9 @@
         "*.ejs": "html",
         "menu.h": "c",
         "error.h": "c",
-        "game.h": "c"
+        "game.h": "c",
+        "lib.h": "c",
+        "case.h": "c",
+        "plateau.h": "c"
     }
 }

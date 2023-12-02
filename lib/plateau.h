@@ -5,6 +5,8 @@
 #include "error.h"
 #include "lib.h"
 
+#define DEFAULT_PERCENTAGE_OF_MINE 0.3
+
 struct plateau
 {
     int width;
@@ -14,22 +16,15 @@ struct plateau
 
 typedef struct plateau Plateau;
 
-struct stackPlateau
-{
-    Plateau *plateau;
-    struct stackPlateau *next;
-};
-
-typedef struct stackPlateau StackPlateau;
-
-
-const StackPlateau *stackPlateauTop;
-
 void pushPlateau(Plateau *plateau);
 void popPlateau(Plateau *plateau);
 
+
 Plateau *createPlateau(int width, int height);
+Plateau *fillPlateauWithMine(Plateau *plateau);
+
 void destroyPlateau(Plateau* board);
+void displayPlateau(Plateau *plateau);
 
 
 #endif /* __PLATEAU__H__ */

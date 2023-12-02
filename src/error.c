@@ -5,6 +5,6 @@ void optionNotRecognized(){
 }
 
 void memoryError(){
-    print("Memory error");
+    printf("Memory error");
     exit(EXIT_FAILURE);
 }

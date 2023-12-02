@@ -3,6 +3,7 @@
 
 #include "lib.h"
 #include "error.h"
+#include "game.h"
 
 void displayMenu();
 void menu();

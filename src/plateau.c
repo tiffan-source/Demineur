@@ -2,45 +2,49 @@
 
 Plateau *createPlateau(int width, int height)
 {
-    StackSquare *stackSquareTop = NULL;
-    Plateau* new = NULL;
+    Plateau* newPlateau = NULL;
     int i;
+    int j;
 
-    new = (Plateau*) malloc(sizeof(Plateau));
-    
+    newPlateau = (Plateau*) malloc(sizeof(Plateau));
 
-    if (new == NULL)
+    if (newPlateau == NULL)
         memoryError();
 
-    new->grid = (Square**) malloc(sizeof(Square*) * height);
+    newPlateau->grid = (Square**) malloc(sizeof(Square*) * height);
 
-    if (new->grid == NULL)
+    if (newPlateau->grid == NULL)
     {
-        free(new);
+        free(newPlateau);
         memoryError();
     }
 
     for (i = 0; i < height; i++)
     {
-        new->grid[i] = (Square*) malloc(sizeof(Square) * width);
+        newPlateau->grid[i] = (Square*) malloc(sizeof(Square) * width);
 
-        if (new->grid[i] == NULL)
+        if (newPlateau->grid[i] == NULL)
         {
-            deepFreeStackSquare(stackSquareTop);
-            free(new->grid);
-            free(new);
+            for (j = 0; j < i; j++)
+            {
+                free(newPlateau->grid[j]);
+            }
+            free(newPlateau->grid);
+            free(newPlateau);
             memoryError();
         }
-
-        stackPlateauTop = pushSquare(stackSquareTop, new->grid[i]);
     }
 
-    freeStackSquare(stackSquareTop);
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+            newPlateau->grid[i][j].state = EMPTY;
+    }
 
-    new->height = height;
-    new->width = width;
+    newPlateau->height = height;
+    newPlateau->width = width;
 
-    return new;
+    return newPlateau;
 }
 
 void destroyPlateau(Plateau* board)
@@ -55,4 +59,49 @@ void destroyPlateau(Plateau* board)
     free(board->grid);
 
     free(board);
+}
+
+// Ajouter balisage de la grille
+
+void displayPlateau(Plateau *plateau)
+{
+    int i;
+    int j;
+
+    system("clear");
+
+    for (i = 0; i < plateau->height; i++)
+    {
+        for (j = 0; j < plateau->width; j++)
+        {
+            printf("| |");
+            // show mine if it's a mine : just to test
+            // if (plateau->grid[i][j].state == MINE)
+            //     printf("|X|");
+        }
+        printf("\n");
+    }
+}
+
+Plateau *fillPlateauWithMine(Plateau *plateau)
+{
+    int numberOfMine = (int) (plateau->width * plateau->height * DEFAULT_PERCENTAGE_OF_MINE);
+
+    int i, x, y;
+
+    srand(time(NULL));
+
+    for (i = 0; i < numberOfMine; i++)
+    {
+        do
+        {
+            x = rand() % plateau->width;
+            y = rand() % plateau->height;
+
+        } while (plateau->grid[y][x].state == MINE);
+
+        plateau->grid[y][x].state = MINE;
+    }
+
+    return plateau;
 }
