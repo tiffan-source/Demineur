@@ -4,6 +4,4 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-enum { MINE, FLAG };
-
 #endif /* __CONSTANTE__H__ */

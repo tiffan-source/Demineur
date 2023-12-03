@@ -33,6 +33,13 @@ Plateau *createPlateau(int width, int height)
             free(newPlateau);
             memoryError();
         }
+
+        for (j = 0; j < width; j++)
+        {
+            newPlateau->grid[i][j].state = EMPTY;
+            newPlateau->grid[i][j].flag = 0;
+        }
+        
     }
 
     for (i = 0; i < height; i++)
@@ -43,6 +50,7 @@ Plateau *createPlateau(int width, int height)
 
     newPlateau->height = height;
     newPlateau->width = width;
+    newPlateau->state = INIT;
 
     return newPlateau;
 }
@@ -70,14 +78,32 @@ void displayPlateau(Plateau *plateau)
 
     system("clear");
 
+    printf(" ");
+    for (j = 0; j < plateau->width; j++)
+    {
+        printf(" %c ", j + 'A');
+    }
+    printf("\n");
+    
     for (i = 0; i < plateau->height; i++)
     {
         for (j = 0; j < plateau->width; j++)
         {
-            printf("| |");
-            // show mine if it's a mine : just to test
-            // if (plateau->grid[i][j].state == MINE)
-            //     printf("|X|");
+            if (j == 0)
+                printf("%d", i);
+            
+            if (plateau->grid[i][j].flag)
+            {
+                printf("|F|");
+            }
+            else
+            switch (plateau->grid[i][j].state)
+            {
+                case EMPTY:
+                default:
+                    printf("| |");
+                    break;
+            }
         }
         printf("\n");
     }

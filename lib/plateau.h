@@ -7,10 +7,13 @@
 
 #define DEFAULT_PERCENTAGE_OF_MINE 0.3
 
+enum {INIT, INPROGRESS, WIN, LOSE, ENDBYUSER};
+
 struct plateau
 {
     int width;
     int height;
+    int state;
     Square **grid;
 };
 

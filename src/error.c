@@ -8,3 +8,7 @@ void memoryError(){
     printf("Memory error");
     exit(EXIT_FAILURE);
 }
+
+void coordError(){
+    printf("Coordonate invalide\n");
+}

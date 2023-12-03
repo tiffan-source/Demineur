@@ -5,5 +5,6 @@
 
 void optionNotRecognized();
 void memoryError();
+void coordError();
 
 #endif /* __ERROR__H__ */

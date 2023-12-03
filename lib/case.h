@@ -3,11 +3,12 @@
 
 #include "lib.h"
 
-enum {EMPTY, MINE, FLAG, UNKNOWN};
+enum {EMPTY, MINE, UNKNOWN};
 
 struct square
 {
     char state;
+    int flag;
 };
 
 typedef struct square Square;
