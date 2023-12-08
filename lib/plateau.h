@@ -11,10 +11,10 @@ enum {INIT, INPROGRESS, WIN, LOSE, ENDBYUSER};
 
 struct plateau
 {
-    int width;
-    int height;
-    int state;
-    Square **grid;
+	int width;
+	int height;
+	int state;
+	Square **grid;
 };
 
 typedef struct plateau Plateau;
