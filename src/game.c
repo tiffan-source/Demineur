@@ -1,7 +1,58 @@
 #include "game.h"
 
-int countMinesAround(x, y, plateau){
+int countMinesAround(int x, int y, Plateau* plateau)
+{
+    int number = 0;
 
+    // Coin superieur gauche
+    if ((x - 1) >= 0 && (y - 1) >= 0 && plateau->grid[y - 1][x - 1].state == MINE)
+    {
+        number++;
+    }
+    
+    // Haut
+    if ((y - 1) >= 0 && plateau->grid[y - 1][x].state == MINE)
+    {
+        number++;
+    }
+
+    // Coin superieur droit
+    if ((x + 1) < plateau->width && (y - 1) >= 0 && plateau->grid[y - 1][x + 1].state == MINE)
+    {
+        number++;
+    }
+    
+    // Droite
+    if ((x - 1) >= 0 && plateau->grid[y][x - 1].state == MINE)
+    {
+        number++;
+    }
+    
+    // Gauche
+    if ((x + 1) < plateau->width && plateau->grid[y][x + 1].state == MINE)
+    {
+        number++;
+    }
+
+    // Coin inferieur gauche
+    if ((x - 1) >= 0 && (y + 1) < plateau->height && plateau->grid[y + 1][x - 1].state == MINE)
+    {
+        number++;
+    }
+
+    // Bas
+    if ((y + 1) < plateau->height && plateau->grid[y + 1][x].state == MINE)
+    {
+        number++;
+    }
+
+    // Coin inferieur droit
+    if ((x + 1) < plateau->width && (y + 1) < plateau->height && plateau->grid[y + 1][x + 1].state == MINE)
+    {
+        number++;
+    }
+
+    return number;
 }
 
 Plateau* revealSquare(int x, int y, Plateau *plateau)
@@ -9,12 +60,17 @@ Plateau* revealSquare(int x, int y, Plateau *plateau)
 
     if (plateau->grid[y][x].state == MINE)
     {
+        printf("Perdu");
         plateau->state = LOSE;
         return plateau;
     }
 
     int count = countMinesAround(x, y, plateau);
 
+    if (count > 0)
+    {
+        plateau->grid[y][x].state = '0' + count;
+    }
 
     return plateau;
 }
@@ -51,7 +107,7 @@ Plateau* makeAction(Plateau* board)
     switch (action[0])
     {
         case 'R':
-            /* code */
+            board = revealSquare(action[1] - 'A', action[2] - '0', board);
             break;
         
         case 'F':

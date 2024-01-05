@@ -76,7 +76,7 @@ void displayPlateau(Plateau *plateau)
     int i;
     int j;
 
-    system("clear");
+    // system("clear");
 
     printf(" ");
     for (j = 0; j < plateau->width; j++)
@@ -97,12 +97,15 @@ void displayPlateau(Plateau *plateau)
                 printf("|F|");
             }
             else
-            switch (plateau->grid[i][j].state)
             {
-                case EMPTY:
-                default:
+                if (plateau->grid[i][j].state == EMPTY || plateau->grid[i][j].state == MINE)
+                {
                     printf("| |");
-                    break;
+                }
+                else
+                {
+                    printf("|%c|", plateau->grid[i][j].state);
+                }
             }
         }
         printf("\n");
