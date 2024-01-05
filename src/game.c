@@ -75,20 +75,6 @@ Plateau* revealSquare(int x, int y, Plateau *plateau)
     return plateau;
 }
 
-Plateau *revealSquare(int x, int y, Plateau *plateau)
-{
-
-	if (plateau->grid[y][x].state == MINE)
-	{
-		plateau->state = LOSE;
-		return plateau;
-	}
-
-	int count = countMinesAround(x, y, plateau);
-
-
-	return (plateau);
-}
 
 /**
  * checkCoord - check board coordonates
