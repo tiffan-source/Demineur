@@ -1,4 +1,4 @@
-#include "../lib/plateau.h"
+#include "plateau.h"
 
 /**
  * createPlateau - create a the board game

@@ -1,4 +1,4 @@
-#include "../lib/menu.h"
+#include "menu.h"
 
 /**
  * main - programm entry point

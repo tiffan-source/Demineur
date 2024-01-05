@@ -1,4 +1,4 @@
-#include "../lib/game.h"
+#include "game.h"
 
 int countMinesAround(int x, int y, Plateau *plateau)
 {

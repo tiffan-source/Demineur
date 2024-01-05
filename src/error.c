@@ -1,4 +1,4 @@
-#include "../lib/error.h"
+#include "error.h"
 
 /**
  * optionNotRecognized - Display an appropriate sentence
