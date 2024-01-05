@@ -5,9 +5,10 @@
 #include "lib.h"
 
 void startGame();
-Plateau* placeFlag(int x, int y, Plateau* board);
-Plateau* makeAction(Plateau *plateau);
-Plateau* revealSquare(int x, int y, Plateau *plateau);
+void listeAction();
+Plateau *placeFlag(int x, int y, Plateau *board);
+Plateau *makeAction(Plateau *plateau);
+Plateau *revealSquare(int x, int y, Plateau *plateau);
 int countMinesAround(int x, int y, Plateau *plateau);
 
 

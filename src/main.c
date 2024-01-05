@@ -1,5 +1,14 @@
-#include "menu.h"
+#include "../lib/menu.h"
 
-int main(){
-    menu();
+/**
+ * main - programm entry point
+ *
+ * Return: an int
+ */
+
+int main(void)
+{
+	menu();
+
+	return (0);
 }
