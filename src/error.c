@@ -1,14 +1,48 @@
 #include "error.h"
 
-void optionNotRecognized(){
-    printf("Option not recognized\n");
+/**
+ * optionNotRecognized - Display an appropriate sentence
+ * on unknown menue option
+ *
+ * Return: a type void element
+ */
+void optionNotRecognized()
+{
+	printf("Option not recognized\n");
+	printf("Please try again\n");
 }
 
-void memoryError(){
-    printf("Memory error");
-    exit(EXIT_FAILURE);
+/**
+ * memoryError - Display an appropriate sentence
+ * on memory error
+ *
+ * Return: a type void element
+ */
+void memoryError()
+{
+	printf("Memory error");
+	exit(EXIT_FAILURE);
 }
 
-void coordError(){
-    printf("Coordonate invalide\n");
+/**
+ * coordError - Display an appropriate sentence
+ * on coordonate errors
+ *
+ * Return: a type void element
+ */
+void coordError()
+{
+	printf("Invalid coordonate\n");
+}
+
+/**
+ * clearBuff - discard properly possible remaining inputs
+ * in buffer
+ *
+ * Return: a type void element
+ */
+void clearBuff()
+{
+	while (getchar() != '\n')
+		continue;
 }

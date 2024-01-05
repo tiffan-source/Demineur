@@ -1,30 +1,32 @@
 #include "menu.h"
 
-void displayMenu(){
-    system("clear");
-    printf("DEMINEUR Menu\n");
-    printf("Choisissez une option\n");
+void displayMenu()
+{
+	system("clear");
+	printf("DEMINEUR Menu\n");
+	printf("Choisissez une option\n");
 
-    printf("1) Nouvelle partie\n");
+	printf("1) Nouvelle partie\n");
 }
 
-void menu(){
-    int select;
+void menu()
+{
+	int select;
 
-    displayMenu();
+	displayMenu();
 
-    // write it better withou scanf
+	// write it better without scanf
 
-    scanf("%d", &select);
+	scanf("%d", &select);
 
-    switch (select)
-    {
-    case 1:
-        startGame();
-        break;
+	switch (select)
+	{
+	case 1:
+		startGame();
+		break;
     
-    default:
-        optionNotRecognized();
-        break;
-    }
+	default:
+		optionNotRecognized();
+		break;
+	}
 }
