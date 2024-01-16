@@ -70,54 +70,60 @@ Plateau* revealSquare(int x, int y, Plateau *plateau)
     }
 
     int count = countMinesAround(x, y, plateau);
+    plateau->grid[y][x].state = '0' + count;
+    plateau->goalReveal--;
+    plateau->grid[y][x].resolve = 1;
 
-    if (count > 0)
+    if (count == 0)
     {
-        plateau->grid[y][x].state = '0' + count;
-        plateau->goalReveal--;
-    }else{
-        plateau->grid[y][x].state = '0';
         // Coin superieur gauche
-        if ((x - 1) >= 0 && (y - 1) >= 0)
+        if ((x - 1) >= 0 && (y - 1) >= 0 && plateau->grid[y - 1][x - 1].resolve == 0)
         {
             revealSquare(x - 1, y - 1, plateau);
         }
         
         // Haut
-        if ((y - 1) >= 0)
+        if ((y - 1) >= 0 && plateau->grid[y - 1][x].resolve == 0)
         {
             revealSquare(x, y - 1, plateau);
         }
 
         // Coin superieur droit
-        if ((x + 1) < plateau->width && (y - 1) >= 0)
+        if ((x + 1) < plateau->width && (y - 1) >= 0 && plateau->grid[y - 1][x + 1].resolve == 0)
         {
             revealSquare(x + 1, y - 1, plateau);
         }
         
         // Droite
-        if ((x - 1) >= 0)
+        if ((x - 1) >= 0 && plateau->grid[y][x - 1].resolve == 0)
         {
             revealSquare(x - 1, y, plateau);
         }
         
         // Gauche
-        if ((x + 1) < plateau->width)
+        if ((x + 1) < plateau->width && plateau->grid[y][x + 1].resolve == 0)
         {
             revealSquare(x + 1, y, plateau);
         }
 
         // Coin inferieur gauche
-        if ((x - 1) >= 0 && (y + 1) < plateau->height)
+        if ((x - 1) >= 0 && (y + 1) < plateau->height && plateau->grid[y + 1][x - 1].resolve == 0)
         {
             revealSquare(x - 1, y + 1, plateau);
         }
 
         // Bas
-        if ((y + 1) < plateau->height)
+        if ((y + 1) < plateau->height && plateau->grid[y + 1][x].resolve == 0)
         {
             revealSquare(x, y + 1, plateau);
         }
+
+        // Coin inferieur droit
+        if ((x + 1) < plateau->width && (y + 1) < plateau->height && plateau->grid[y + 1][x + 1].resolve == 0)
+        {
+            revealSquare(x + 1, y + 1, plateau);
+        }
+
     }
 
     return plateau;
@@ -177,8 +183,8 @@ Plateau *makeAction(Plateau *board)
 	switch (action[0])
 	{
         case 'R':
-            board = revealSquare(action[1] - 'A', action[2] - '0', board);
-            break;
+        board = revealSquare(action[1] - 'A', action[2] - '0', board);
+        break;
         
         case 'F':
 		board = placeFlag(action[1] - 'A', action[2] - '0', board);
@@ -238,8 +244,22 @@ void startGame()
 		displayPlateau(board);
 
 		board = makeAction(board);
+            
+        if (checkForWin(board))
+        {
+            displayPlateau(board);
+            printf("Vous avez gagne\n");
+            endOfGame = 1;
+        }
 
-		if (board->state == LOSE || board->state == ENDBYUSER || board->state == WIN)
+        if (checkForLoose(board))
+        {
+            displayPlateau(board);
+            printf("Vous avez perdu\n");
+            endOfGame = 1;
+        }
+
+		if (board->state == ENDBYUSER)
 		{
 			endOfGame = 1;
 		}
@@ -252,7 +272,7 @@ void saveGame(Plateau *plateau)
 {
     FILE* saveFile = NULL;
 
-    saveFile = fopen("/home/blackgenius/Documents/randomname", 'w+');
+    saveFile = fopen("/home/blackgenius/Documents/randomname", "w+");
 
     fprintf(saveFile, "w:%d", plateau->width);
     fprintf(saveFile, "h:%d", plateau->height);

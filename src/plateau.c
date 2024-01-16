@@ -100,7 +100,7 @@ void displayPlateau(Plateau *plateau)
 	int i;
 	int j;
 
-	system("clear");
+	// system("clear");
 
 	printf(" ");
 	for (j = 0; j < plateau->width; j++)

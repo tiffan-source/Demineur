@@ -9,6 +9,7 @@ struct square
 {
     char state;
     int flag;
+    int resolve;
 };
 
 typedef struct square Square;
