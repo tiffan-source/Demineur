@@ -58,6 +58,8 @@ Plateau *createPlateau(int width, int height)
 	newPlateau->height = height;
 	newPlateau->width = width;
 	newPlateau->state = INIT;
+    newPlateau->goalReveal = height * width;
+    newPlateau->duree = 0;
 	
 	return (newPlateau);
 }
@@ -159,6 +161,8 @@ Plateau *fillPlateauWithMine(Plateau *plateau)
 
 		plateau->grid[y][x].state = MINE;
 	}
+
+    plateau->goalReveal -= numberOfMine;
 
 	return (plateau);
 }

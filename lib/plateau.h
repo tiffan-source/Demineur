@@ -14,6 +14,8 @@ struct plateau
 	int width;
 	int height;
 	int state;
+    int goalReveal;
+    int duree;
 	Square **grid;
 };
 

@@ -60,8 +60,12 @@ Plateau* revealSquare(int x, int y, Plateau *plateau)
 
     if (plateau->grid[y][x].state == MINE)
     {
-        printf("Perdu");
         plateau->state = LOSE;
+        return plateau;
+    }
+
+    if (plateau->grid[y][x].flag == 1)
+    {
         return plateau;
     }
 
@@ -70,6 +74,50 @@ Plateau* revealSquare(int x, int y, Plateau *plateau)
     if (count > 0)
     {
         plateau->grid[y][x].state = '0' + count;
+        plateau->goalReveal--;
+    }else{
+        plateau->grid[y][x].state = '0';
+        // Coin superieur gauche
+        if ((x - 1) >= 0 && (y - 1) >= 0)
+        {
+            revealSquare(x - 1, y - 1, plateau);
+        }
+        
+        // Haut
+        if ((y - 1) >= 0)
+        {
+            revealSquare(x, y - 1, plateau);
+        }
+
+        // Coin superieur droit
+        if ((x + 1) < plateau->width && (y - 1) >= 0)
+        {
+            revealSquare(x + 1, y - 1, plateau);
+        }
+        
+        // Droite
+        if ((x - 1) >= 0)
+        {
+            revealSquare(x - 1, y, plateau);
+        }
+        
+        // Gauche
+        if ((x + 1) < plateau->width)
+        {
+            revealSquare(x + 1, y, plateau);
+        }
+
+        // Coin inferieur gauche
+        if ((x - 1) >= 0 && (y + 1) < plateau->height)
+        {
+            revealSquare(x - 1, y + 1, plateau);
+        }
+
+        // Bas
+        if ((y + 1) < plateau->height)
+        {
+            revealSquare(x, y + 1, plateau);
+        }
     }
 
     return plateau;
@@ -112,15 +160,15 @@ Plateau *makeAction(Plateau *board)
 
 	printf("Entrez une action (x y action) et Q pour retourner au menu\n");
 
+	fflush(stdin); // clear out buffer input
 	fgets(action, 5, stdin);
 	// lister les differentes tions possibles
 	//listeAction();
-	//clearBuff(); // clear out buffer input
 
 	printf("action = %s\n", action);
 
 
-	if (!checkCoord(action[1] - 'A', action[2] - '0', board) && action[0] != 'Q')
+	if ((action[0] == 'F' || action[0] == 'R') && !checkCoord(action[1] - 'A', action[2] - '0', board))
 	{
 		coordError();
 		return (board);
@@ -140,13 +188,40 @@ Plateau *makeAction(Plateau *board)
 		board->state = ENDBYUSER;
 		break;
 
+        case 'S':
+        saveGame(board);
+        board->state = ENDBYUSER;
+
+        case 'T':
+        resolePlateau(board);
+        break;
+
         default:
 		break;
     }
 
 	return (board);
-
 }
+
+int checkForWin(Plateau *plateau){
+    if (plateau->goalReveal == 0)
+    {
+        plateau->state = WIN;
+        return 1;
+    }
+    return 0;
+}
+
+int checkForLoose(Plateau *plateau){
+    if (plateau->state == LOSE)
+    {
+        return 1;
+    }
+
+    return 0;
+    
+}
+
 
 void startGame()
 {
@@ -155,10 +230,11 @@ void startGame()
 
 	board = fillPlateauWithMine(board);
 
-	clearBuff(); // skip the '\n' character of the user
 
 	while (endOfGame == 0)
 	{
+        board->state = INPROGRESS;
+
 		displayPlateau(board);
 
 		board = makeAction(board);
@@ -166,10 +242,22 @@ void startGame()
 		if (board->state == LOSE || board->state == ENDBYUSER || board->state == WIN)
 		{
 			endOfGame = 1;
-		}        
+		}
 	}
 
 	destroyPlateau(board);
+}
+
+void saveGame(Plateau *plateau)
+{
+    FILE* saveFile = NULL;
+
+    saveFile = fopen("/home/blackgenius/Documents/randomname", 'w+');
+
+    fprintf(saveFile, "w:%d", plateau->width);
+    fprintf(saveFile, "h:%d", plateau->height);
+
+    fclose(saveFile);
 }
 
 void listeAction()
@@ -177,4 +265,20 @@ void listeAction()
 	printf("Voici les differentes actions possibles");
 	printf("A: ");
 	printf("B: ");
+}
+
+void resolePlateau(Plateau *plateau)
+{
+    int i, j;
+
+    for (i = 0; i < plateau->height; i++)
+    {
+        for (j = 0; j < plateau->width; j++)
+        {
+            if (plateau->grid[i][j].state == MINE)
+            {
+                plateau->grid[i][j].flag = 1;
+            }
+        }
+    }
 }

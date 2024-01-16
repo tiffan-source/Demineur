@@ -1,2 +1,2 @@
-gcc -I ./lib ./src/*.c -o plateau
+gcc -g -I ./lib ./src/*.c -o plateau
 valgrind --tool=memcheck --leak-check=yes --leak-resolution=high --show-reachable=yes ./plateau
