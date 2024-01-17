@@ -1,5 +1,14 @@
 #include "game.h"
 
+/**
+ * countMinesAround 
+ * @x: coordonnée x
+ * @y: coordonnée y
+ * @plateau : le plateau
+ * description: compte les mines autour d'une case
+ * Return: number,le nombre de mine autour de la case
+ */
+
 int countMinesAround(int x, int y, Plateau* plateau)
 {
     int number = 0;
@@ -54,6 +63,15 @@ int countMinesAround(int x, int y, Plateau* plateau)
 
     return number;
 }
+
+/**
+ * revealSquare 
+ * @x: coordonnée x
+ * @y: coordonnée y
+ * @plateau : le plateau
+ * description: dévoile une case, son contenu précisement
+ * Return: retourne le plateau contenant la case dévoilé
+ */
 
 Plateau* revealSquare(int x, int y, Plateau *plateau)
 {
@@ -145,6 +163,15 @@ int checkCoord(int x, int y, Plateau* board)
 	return (1);
 }
 
+/**
+ * placeFlag 
+ * @x: coordonnée x
+ * @y: coordonnée y
+ * @board : le plateau
+ * description: place un Flag 'F' dans une case donnée
+ * Return: le plateau avec la case contenant la lettre 'F' à la position spécifié
+ */
+
 Plateau* placeFlag(int x, int y, Plateau* board)
 {
 	board->grid[y][x].flag = board->grid[y][x].flag ? 0 : 1;
@@ -209,6 +236,12 @@ Plateau *makeAction(Plateau *board)
 	return (board);
 }
 
+/**
+ * checkForWin 
+ * @board : le plateau
+ * description: Vérifie sur le jeu est gagné ou pas
+ * Return: 1 si le jeu est gagné et 0 sinon
+ */
 int checkForWin(Plateau *plateau){
     if (plateau->goalReveal == 0)
     {
@@ -218,6 +251,12 @@ int checkForWin(Plateau *plateau){
     return 0;
 }
 
+/**
+ * checkForLoose 
+ * @plateau : le plateau
+ * description: Vérifie sur le jeu est perdu ou pas
+ * Return: 1 si le jeu est perdu et 0 sinon
+ */
 int checkForLoose(Plateau *plateau){
     if (plateau->state == LOSE)
     {
@@ -228,7 +267,11 @@ int checkForLoose(Plateau *plateau){
     
 }
 
-
+/**
+ * startGame 
+ * description: démarre le jeu
+ * Return: Rien
+ */
 void startGame()
 {
 	Plateau *board = createPlateau(9, 9);
@@ -268,6 +311,13 @@ void startGame()
 	destroyPlateau(board);
 }
 
+/**
+ * saveGame 
+ * @board: le pleteau
+ *
+ * description: sauvegarde l'état courant du jeu
+ * Return: Rien
+ */
 void saveGame(Plateau *plateau)
 {
     FILE* saveFile = NULL;
@@ -280,6 +330,11 @@ void saveGame(Plateau *plateau)
     fclose(saveFile);
 }
 
+/**
+ * listeAction 
+ * description: liste les actions applicables à un plateau
+ * Return: Rien
+ */
 void listeAction()
 {
 	printf("Voici les differentes actions possibles");
@@ -287,6 +342,13 @@ void listeAction()
 	printf("B: ");
 }
 
+/**
+ * resolePlateau 
+ * @board: le pleteau
+ *
+ * description: Révèle tout le pleteau, pour des buts de debuggage 
+ * Return: Rien
+ */
 void resolePlateau(Plateau *plateau)
 {
     int i, j;
