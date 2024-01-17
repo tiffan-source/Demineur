@@ -5,6 +5,8 @@
 #include "lib.h"
 
 void startGame();
+void loadGame();
+void game(Plateau *board);
 void listeAction();
 Plateau *placeFlag(int x, int y, Plateau *board);
 Plateau *makeAction(Plateau *plateau);

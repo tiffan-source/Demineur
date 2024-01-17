@@ -2,11 +2,12 @@
 
 void displayMenu()
 {
-	system("clear");
+	// system("clear");
 	printf("DEMINEUR Menu\n");
 	printf("Choisissez une option\n");
 
 	printf("1) Nouvelle partie\n");
+    printf("2) Charger une partie\n");
 }
 
 void menu()
@@ -24,6 +25,10 @@ void menu()
 	case 1:
 		startGame();
 		break;
+
+    case 2:
+        loadGame();
+        break;
     
 	default:
 		optionNotRecognized();

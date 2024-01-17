@@ -6,6 +6,9 @@
         "game.h": "c",
         "lib.h": "c",
         "case.h": "c",
-        "plateau.h": "c"
+        "plateau.h": "c",
+        "dirent.h": "c",
+        "stdlib.h": "c",
+        "dirent_ext.h": "c"
     }
 }

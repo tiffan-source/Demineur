@@ -26,6 +26,8 @@ void popPlateau(Plateau *plateau);
 
 
 Plateau *createPlateau(int width, int height);
+Plateau *createPlateauFromSave(const char *saveLine);
+
 Plateau *fillPlateauWithMine(Plateau *plateau);
 
 void destroyPlateau(Plateau* board);

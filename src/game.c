@@ -1,5 +1,6 @@
 #include "game.h"
 
+
 int countMinesAround(int x, int y, Plateau* plateau)
 {
     int number = 0;
@@ -228,14 +229,10 @@ int checkForLoose(Plateau *plateau){
     
 }
 
-
-void startGame()
+void game(Plateau *board)
 {
-	Plateau *board = createPlateau(9, 9);
-	int endOfGame = 0;
 
-	board = fillPlateauWithMine(board);
-
+    int endOfGame = 0;
 
 	while (endOfGame == 0)
 	{
@@ -265,18 +262,67 @@ void startGame()
 		}
 	}
 
+}
+
+
+void startGame()
+{
+	Plateau *board = createPlateau(9, 9);
+
+	board = fillPlateauWithMine(board);
+
+    game(board);
+
 	destroyPlateau(board);
 }
 
 void saveGame(Plateau *plateau)
 {
-    FILE* saveFile = NULL;
 
-    saveFile = fopen("/home/blackgenius/Documents/randomname", "w+");
+    char* pwd = getenv("PWD");
+    char filePath[256];
+    FILE* saveFile;
 
-    fprintf(saveFile, "w:%d", plateau->width);
-    fprintf(saveFile, "h:%d", plateau->height);
+    sprintf(filePath, "%s/save.txt", pwd);
 
+    saveFile = fopen(filePath, "a+");
+
+    if (saveFile == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier\n");
+        exit(1);
+    }
+
+    fprintf(saveFile, "%d %d %d %d ", plateau->width, plateau->height, plateau->state, plateau->goalReveal);
+
+    int i, j;
+
+    for (i = 0; i < plateau->height; i++)
+    {
+        for (j = 0; j < plateau->width; j++)
+        {
+            if (plateau->grid[i][j].state == MINE)
+            {
+                fprintf(saveFile, "M");
+                if (plateau->grid[i][j].flag)
+                {
+                    fprintf(saveFile, "F");
+                }
+                else{
+                    fprintf(saveFile, " ");
+                }
+            }
+            else if (plateau->grid[i][j].state == EMPTY)
+            {
+                fprintf(saveFile, "  ");
+            }
+            else
+            {
+                fprintf(saveFile, "%c ", plateau->grid[i][j].state);
+            }
+        }
+    }
+    fprintf(saveFile, "\n");
     fclose(saveFile);
 }
 
@@ -301,4 +347,103 @@ void resolePlateau(Plateau *plateau)
             }
         }
     }
+}
+
+int selectGame()
+{
+    FILE *save = NULL;
+    char *line = NULL;
+    int read;
+    size_t len;
+    int i = 0, toReveal, w, h, s, select;
+
+    printf("Choisissez une partie a charger\n");
+
+    char* pwd = getenv("PWD");
+    char filePath[256];
+
+    sprintf(filePath, "%s/save.txt", pwd);
+
+    save = fopen(filePath, "r");
+
+    if (save == NULL)
+    {
+        printf("Aucune sauvegarde disponible\n");
+        exit(1);
+    }
+
+    while ((read = getline(&line, &len, save)) != -1)
+    {
+        sscanf(line, "%d %d %d %d", &w, &h, &s, &toReveal);
+        i++;
+
+        printf("%d) Partie %d Largeur: %d Hauteur: %d Etat: %d Case a reveler %d\n", i, i, w, h, s, toReveal);
+    }
+
+    if (line)
+    {
+        free(line);
+    }
+    
+
+    if (i == 0)
+    {
+        printf("Aucune sauvegarde disponible\n");
+        exit(1);
+    }
+
+    do
+    {
+        scanf("%d", &select);
+        if (select < 1 || select > i)
+        {
+            printf("Veuillez entrer un nombre entre 1 et %d\n", i);
+        }
+        
+    } while (select < 1 || select > i);
+    
+
+    fclose(save);
+
+    return select;
+}
+
+
+void loadGame()
+{
+    int select = selectGame();
+    FILE *save = NULL;
+    char *line = NULL;
+    size_t len;
+    int read, i = 0;
+    char* pwd = getenv("PWD");
+    char filePath[256];
+    Plateau* board;
+
+    sprintf(filePath, "%s/save.txt", pwd);
+
+    save = fopen(filePath, "r");
+
+    if (save == NULL)
+    {
+        printf("Aucune sauvegarde disponible\n");
+        exit(1);
+    }
+
+    while ((read = getline(&line, &len, save)) != -1)
+    {
+        i++;
+        if (i == select)
+        {
+            board = createPlateauFromSave(line);
+            free(line);
+            fclose(save);
+            break;
+        }
+    }
+
+
+    game(board);
+    
+    destroyPlateau(board);
 }

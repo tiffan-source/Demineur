@@ -166,3 +166,75 @@ Plateau *fillPlateauWithMine(Plateau *plateau)
 
 	return (plateau);
 }
+
+Plateau *createPlateauFromSave(const char *saveLine)
+{
+    Plateau *newPlateau = NULL;
+    int i, j;
+    int width, height, state, goal;
+    char caseData[256];
+
+    newPlateau = (Plateau*) malloc(sizeof(Plateau));
+
+    if (newPlateau == NULL)
+        memoryError();
+
+    sscanf(saveLine, "%d %d %d %d %s", &width, &height, &state, &goal, caseData);
+
+    newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
+
+    if (newPlateau->grid == NULL)
+    {
+        free(newPlateau);
+        memoryError();
+    }
+
+    for (i = 0; i < height; i++)
+	{
+		newPlateau->grid[i] = (Square *)malloc(sizeof(Square) * width);
+
+		if (newPlateau->grid[i] == NULL)
+		{
+			for (j = 0; j < i; j++)
+			{
+				free(newPlateau->grid[j]);
+			}
+			free(newPlateau->grid);
+			free(newPlateau);
+			memoryError();
+		}
+
+		for (j = 0; j < width; j++)
+		{
+			newPlateau->grid[i][j].state = EMPTY;
+			newPlateau->grid[i][j].flag = 0;
+		}
+	}
+
+    for (i = 0; i < height; i++)
+    {
+        for (j = 0; j < width; j++)
+        {
+            if (caseData[2*i+2*j] == 'M')
+            {
+                newPlateau->grid[i][j].state = MINE;
+
+                newPlateau->grid[i][j].flag = caseData[2*i+2*j + 1] == 'F' ? 1 : 0;
+                
+            }
+            else if(caseData[2*i+2*j] != ' ')
+            {
+                newPlateau->grid[i][j].state = caseData[2*i+2*j];
+            }
+        }
+    }
+
+    newPlateau->height = height;
+    newPlateau->width = width;
+    newPlateau->state = INPROGRESS;
+    newPlateau->goalReveal = goal;
+
+    return newPlateau;
+    
+    
+}
