@@ -1,5 +1,10 @@
 #include "menu.h"
 
+/**
+ * displayMenu 
+ * description: Affiche le Menu du jeu
+ * Return: Rien
+ */
 void displayMenu()
 {
 	system("clear");
@@ -9,6 +14,11 @@ void displayMenu()
 	printf("1) Nouvelle partie\n");
 }
 
+/**
+ * menu 
+ * description: choisit un élément du menu
+ * Return: Rien
+ */
 void menu()
 {
 	int select;
