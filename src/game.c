@@ -267,7 +267,7 @@ void game(Plateau *board)
 
 void startGame()
 {
-	Plateau *board = createPlateau(9, 9);
+	Plateau *board = createPlateau(4, 4);
 
 	board = fillPlateauWithMine(board);
 
@@ -309,16 +309,16 @@ void saveGame(Plateau *plateau)
                     fprintf(saveFile, "F");
                 }
                 else{
-                    fprintf(saveFile, " ");
+                    fprintf(saveFile, "_");
                 }
             }
             else if (plateau->grid[i][j].state == EMPTY)
             {
-                fprintf(saveFile, "  ");
+                fprintf(saveFile, "__");
             }
             else
             {
-                fprintf(saveFile, "%c ", plateau->grid[i][j].state);
+                fprintf(saveFile, "%c_", plateau->grid[i][j].state);
             }
         }
     }

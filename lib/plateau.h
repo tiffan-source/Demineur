@@ -5,7 +5,7 @@
 #include "error.h"
 #include "lib.h"
 
-#define DEFAULT_PERCENTAGE_OF_MINE 0.05
+#define DEFAULT_PERCENTAGE_OF_MINE 0.5
 
 enum {INIT, INPROGRESS, WIN, LOSE, ENDBYUSER};
 

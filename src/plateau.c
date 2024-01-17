@@ -170,7 +170,7 @@ Plateau *fillPlateauWithMine(Plateau *plateau)
 Plateau *createPlateauFromSave(const char *saveLine)
 {
     Plateau *newPlateau = NULL;
-    int i, j;
+    int i, j, testAssign;
     int width, height, state, goal;
     char caseData[256];
 
@@ -179,7 +179,7 @@ Plateau *createPlateauFromSave(const char *saveLine)
     if (newPlateau == NULL)
         memoryError();
 
-    sscanf(saveLine, "%d %d %d %d %s", &width, &height, &state, &goal, caseData);
+    testAssign = sscanf(saveLine, "%d %d %d %d %s", &width, &height, &state, &goal, caseData);
 
     newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
 
@@ -215,16 +215,16 @@ Plateau *createPlateauFromSave(const char *saveLine)
     {
         for (j = 0; j < width; j++)
         {
-            if (caseData[2*i+2*j] == 'M')
+            if (caseData[width*i*2+2*j] == 'M')
             {
                 newPlateau->grid[i][j].state = MINE;
 
-                newPlateau->grid[i][j].flag = caseData[2*i+2*j + 1] == 'F' ? 1 : 0;
+                newPlateau->grid[i][j].flag = caseData[width*i*2+2*j + 1] == 'F' ? 1 : 0;
                 
             }
-            else if(caseData[2*i+2*j] != ' ')
+            else if(caseData[width*i*2+2*j] != '_')
             {
-                newPlateau->grid[i][j].state = caseData[2*i+2*j];
+                newPlateau->grid[i][j].state = caseData[width*i*2+2*j];
             }
         }
     }
