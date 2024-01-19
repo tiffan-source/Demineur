@@ -8,7 +8,12 @@
 
 int main(void)
 {
-	menu();
+    int inGame = 1;
+
+    while (inGame)
+    {
+	inGame = menu();
+    }
 
 	return (0);
 }

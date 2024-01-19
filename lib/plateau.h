@@ -5,7 +5,9 @@
 #include "error.h"
 #include "lib.h"
 
-#define DEFAULT_PERCENTAGE_OF_MINE 0.5
+#define DEFAULT_PERCENTAGE_OF_MINE 0.1
+#define DEFAULT_WIDTH 9
+#define DEFAULT_HEIGHT 9
 
 enum {INIT, INPROGRESS, WIN, LOSE, ENDBYUSER};
 

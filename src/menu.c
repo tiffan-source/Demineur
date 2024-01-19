@@ -2,36 +2,47 @@
 
 void displayMenu()
 {
-	// system("clear");
+	system("clear");
 	printf("DEMINEUR Menu\n");
-	printf("Choisissez une option\n");
+	printf("CHOISISSEZ VOTRE OPTION\n");
 
 	printf("1) Nouvelle partie\n");
     printf("2) Charger une partie\n");
+    printf("3) Quitter\n");
 }
 
-void menu()
+int menu()
 {
-	int select;
+	char select[256];
 
 	displayMenu();
 
-	// write it better without scanf
+    scanf("%s", select);
+    if (strlen(select) > 1)
+    {
+        optionNotRecognized();
+        return 1;
+    }
 
-	scanf("%d", &select);
-
-	switch (select)
+	switch (select[0])
 	{
-	case 1:
+	case '1':
 		startGame();
+        return 1;
 		break;
 
-    case 2:
+    case '2':
         loadGame();
+        return 1;
         break;
     
+    case '3':
+        return 0;
+        break;
+
 	default:
 		optionNotRecognized();
+        return 1;
 		break;
 	}
 }

@@ -8,8 +8,10 @@
  */
 void optionNotRecognized()
 {
+    system("clear");
 	printf("Option not recognized\n");
 	printf("Please try again\n");
+    sleep(1);
 }
 
 /**
