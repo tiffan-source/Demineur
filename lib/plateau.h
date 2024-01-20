@@ -17,7 +17,7 @@ struct plateau
 	int height;
 	int state;
     int goalReveal;
-    int duree;
+    double duree;
 	Square **grid;
 };
 
@@ -26,9 +26,14 @@ typedef struct plateau Plateau;
 void pushPlateau(Plateau *plateau);
 void popPlateau(Plateau *plateau);
 
+void setPlateauSettings(int *width, int *height);
+void setCustomePlateauSettings(int *width, int *height);
 
-Plateau *createPlateau(int width, int height);
+
+Plateau *createPlateau();
 Plateau *createPlateauFromSave(const char *saveLine);
+
+
 
 Plateau *fillPlateauWithMine(Plateau *plateau);
 

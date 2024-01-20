@@ -1,5 +1,79 @@
 #include "plateau.h"
 
+
+void setCustomePlateauSettings(int *width, int *height)
+{
+    int choiceWidth;
+    int choiceHeight;
+
+    system("clear");
+
+    printf("Veuillez choisir la taille du plateau de jeu :\n");
+
+    while (scanf("%d", &choiceWidth) != 1 || choiceWidth < 1 || choiceWidth > 26)
+    {
+        printf("Veuillez choisir la largeur du plateau de jeu (1-26) :\n");
+        while (getchar() != '\n');
+    }
+
+    while (scanf("%d", &choiceHeight) != 1 || choiceHeight < 1 || choiceHeight > 26)
+    {
+        printf("Veuillez choisir la hauteur du plateau de jeu (1-26) :\n");
+        while (getchar() != '\n');
+    }
+
+    *width = choiceWidth;
+    *height = choiceHeight;
+            
+}
+
+void setPlateauSettings(int *width, int *height)
+{
+    char choice[256];
+
+    system("clear");
+
+    printf("Veuillez choisir la taille du plateau de jeu :\n");
+    printf("1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    printf("2 - Moyen (16x16)\n");
+    printf("3 - Grand (26x16)\n");
+    printf("4 - Personnalisé\n");
+
+    scanf("%s", choice);
+    if (strlen(choice) > 1)
+    {
+        optionNotRecognized();
+        setPlateauSettings(width, height);
+        return;
+    }
+    
+
+    switch (choice[0])
+    {
+        case '1':
+            *width = DEFAULT_WIDTH;
+            *height = DEFAULT_HEIGHT;
+            break;
+        case '2':
+            *width = 16;
+            *height = 16;
+            break;
+        case '3':
+            *width = 26;
+            *height = 16;
+            break;
+        case '4':
+            setCustomePlateauSettings(width, height);
+            break;
+
+        default:
+            optionNotRecognized();
+            setPlateauSettings(width, height);
+            break;
+    }
+
+}
+
 /**
  * createPlateau - create a the board game
  * @height: the height of the board
@@ -8,11 +82,15 @@
  * description: function to create and initilize a board game
  * Return: the newlly created board
  */
-Plateau *createPlateau(int width, int height)
+Plateau *createPlateau()
 {
 	Plateau *newPlateau = NULL;
 	int i;
 	int j;
+    int height = DEFAULT_HEIGHT;
+    int width = DEFAULT_WIDTH;
+
+    setPlateauSettings(&width, &height);
 
 	newPlateau = (Plateau *)malloc(sizeof(Plateau));
 
@@ -167,6 +245,13 @@ Plateau *fillPlateauWithMine(Plateau *plateau)
 	return (plateau);
 }
 
+/**
+ * createPlateauFromSave - create a the board from the save one
+ * @saveLine: the line which contains the saved game information
+ *
+ * description: function to create and print out the last board game
+ * Return: the saved game board
+ */
 Plateau *createPlateauFromSave(const char *saveLine)
 {
     Plateau *newPlateau = NULL;

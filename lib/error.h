@@ -4,6 +4,7 @@
 #include "lib.h"
 
 void optionNotRecognized();
+void sizePlateauError();
 void memoryError();
 void coordError();
 void clearBuff();

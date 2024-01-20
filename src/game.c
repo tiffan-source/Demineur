@@ -231,8 +231,11 @@ int checkForLoose(Plateau *plateau){
 
 void game(Plateau *board)
 {
-
+    
     int endOfGame = 0;
+    time_t start, end;
+
+    time(&start);
 
 	while (endOfGame == 0)
 	{
@@ -262,12 +265,23 @@ void game(Plateau *board)
 		}
 	}
 
+    time(&end);
+
+    board->duree = difftime(end, start);
+
+    displayPlateau(board);
+
+    printf("Vous avez mis %d secondes pour resoudre le plateau\n", board->duree);
+
+        sleep(2);
+
+
 }
 
 
 void startGame()
 {
-	Plateau *board = createPlateau(9, 9);
+	Plateau *board = createPlateau();
 
 	board = fillPlateauWithMine(board);
 
