@@ -1,5 +1,16 @@
 #include "error.h"
 
+void sizePlateauError()
+{
+    system("clear");
+    printf("La longueur recquise est intraitable\n");
+    printf("La taille maximale du plateu est de 99x99\n");
+    printf("Veuillez réessayer\n");
+    printf("TIPS: Les tailles negatives ne sont pas accepter\n");
+
+    sleep(1);
+}
+
 /**
  * optionNotRecognized - Display an appropriate sentence
  * on unknown menue option
@@ -8,8 +19,10 @@
  */
 void optionNotRecognized()
 {
+    system("clear");
 	printf("Option not recognized\n");
 	printf("Please try again\n");
+    sleep(1);
 }
 
 /**

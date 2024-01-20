@@ -249,36 +249,49 @@ int checkForLoose(Plateau *plateau)
  * Return: a type void element
  */
 void game(Plateau *board)
-{
-	int endOfGame = 0;
+{    
+    int endOfGame = 0;
+    time_t start, end;
 
-	while (endOfGame == 0)
-	{
-		board->state = INPROGRESS;
+    time(&start);
 
-		displayPlateau(board);
+    while (endOfGame == 0)
+    {
+	    board->state = INPROGRESS;
 
-		board = makeAction(board);
+	    displayPlateau(board);
 
-		if (checkForWin(board))
-		{
-			displayPlateau(board);
-			printf("Vous avez gagne\n");
-			endOfGame = 1;
-		}
+	    board = makeAction(board);
 
-		if (checkForLoose(board))
-		{
-			displayPlateau(board);
-			printf("Vous avez perdu\n");
-			endOfGame = 1;
-		}
+	    if (checkForWin(board))
+	    {
+		    displayPlateau(board);
+		    printf("Vous avez gagne\n");
+		    endOfGame = 1;
+	    }
 
-		if (board->state == ENDBYUSER)
-		{
-			endOfGame = 1;
-		}
-	}
+	    if (checkForLoose(board))
+	    {
+		    displayPlateau(board);
+		    printf("Vous avez perdu\n");
+		    endOfGame = 1;
+	    }
+
+	    if (board->state == ENDBYUSER)
+	    {
+		    endOfGame = 1;
+	    }
+    }
+
+    time(&end);
+
+    board->duree = difftime(end, start);
+
+    displayPlateau(board);
+
+    printf("Vous avez mis %d secondes pour resoudre le plateau\n", board->duree);
+
+        sleep(2);
 }
 
 /**
@@ -288,7 +301,7 @@ void game(Plateau *board)
  */
 void startGame()
 {
-	Plateau *board = createPlateau(4, 4);
+	Plateau *board = createPlateau();
 
 	board = fillPlateauWithMine(board);
 
@@ -316,7 +329,7 @@ void saveGame(Plateau *plateau)
 	}
 
 	fprintf(saveFile, "%d %d %d %d ", plateau->width, plateau->height, plateau->state, plateau->goalReveal);
-
+    
 	for (i = 0; i < plateau->height; i++)
 	{
 		for (j = 0; j < plateau->width; j++)
@@ -331,6 +344,10 @@ void saveGame(Plateau *plateau)
 				else{
 					fprintf(saveFile, "_");
 				}
+			}
+			else if (plateau->grid[i][j].flag == 1)
+			{
+				fprintf(saveFile, "F_");
 			}
 			else if (plateau->grid[i][j].state == EMPTY)
 			{
@@ -383,99 +400,99 @@ void resolePlateau(Plateau *plateau)
 
 int selectGame()
 {
-    FILE *save = NULL;
-    char *line = NULL;
-    int read;
-    size_t len;
-    int i = 0, toReveal, w, h, s, select;
+	FILE *save = NULL;
+	char *line = NULL;
+	int read;
+	size_t len;
+	int i = 0, toReveal, w, h, s, select;
 
-    printf("Choisissez une partie a charger\n");
+	printf("Choisissez une partie a charger\n");
 
-    char* pwd = getenv("PWD");
-    char filePath[256];
+	char* pwd = getenv("PWD");
+	char filePath[256];
 
-    sprintf(filePath, "%s/save.txt", pwd);
+	sprintf(filePath, "%s/save.txt", pwd);
 
-    save = fopen(filePath, "r");
+	save = fopen(filePath, "r");
 
-    if (save == NULL)
-    {
-        printf("Aucune sauvegarde disponible\n");
-        exit(1);
-    }
+	if (save == NULL)
+	{
+		printf("Aucune sauvegarde disponible\n");
+		exit(1);
+	}
 
-    while ((read = getline(&line, &len, save)) != -1)
-    {
-        sscanf(line, "%d %d %d %d", &w, &h, &s, &toReveal);
-        i++;
+	while ((read = getline(&line, &len, save)) != -1)
+	{
+		sscanf(line, "%d %d %d %d", &w, &h, &s, &toReveal);
+		i++;
 
-        printf("%d) Partie %d Largeur: %d Hauteur: %d Etat: %d Case a reveler %d\n", i, i, w, h, s, toReveal);
-    }
+		printf("%d) Partie %d Largeur: %d Hauteur: %d Etat: %d Case a reveler %d\n", i, i, w, h, s, toReveal);
+	}
 
-    if (line)
-    {
-        free(line);
-    }
-
-
-    if (i == 0)
-    {
-        printf("Aucune sauvegarde disponible\n");
-        exit(1);
-    }
-
-    do
-    {
-        scanf("%d", &select);
-        if (select < 1 || select > i)
-        {
-            printf("Veuillez entrer un nombre entre 1 et %d\n", i);
-        }
-
-    } while (select < 1 || select > i);
+	if (line)
+	{
+		free(line);
+	}
 
 
-    fclose(save);
+	if (i == 0)
+	{
+		printf("Aucune sauvegarde disponible\n");
+		exit(1);
+	}
 
-    return select;
+	do
+	{
+		scanf("%d", &select);
+		if (select < 1 || select > i)
+		{
+			printf("Veuillez entrer un nombre entre 1 et %d\n", i);
+		}
+
+	} while (select < 1 || select > i);
+
+
+	fclose(save);
+
+	return select;
 }
 
 
 void loadGame()
 {
-    int select = selectGame();
-    FILE *save = NULL;
-    char *line = NULL;
-    size_t len;
-    int read, i = 0;
-    char* pwd = getenv("PWD");
-    char filePath[256];
-    Plateau* board;
+	int select = selectGame();
+	FILE *save = NULL;
+	char *line = NULL;
+	size_t len;
+	int read, i = 0;
+	char* pwd = getenv("PWD");
+	char filePath[256];
+	Plateau* board;
 
-    sprintf(filePath, "%s/save.txt", pwd);
+	sprintf(filePath, "%s/save.txt", pwd);
 
-    save = fopen(filePath, "r");
+	save = fopen(filePath, "r");
 
-    if (save == NULL)
-    {
-        printf("Aucune sauvegarde disponible\n");
-        exit(1);
-    }
+	if (save == NULL)
+	{
+		printf("Aucune sauvegarde disponible\n");
+		exit(1);
+	}
 
-    while ((read = getline(&line, &len, save)) != -1)
-    {
-        i++;
-        if (i == select)
-        {
-            board = createPlateauFromSave(line);
-            free(line);
-            fclose(save);
-            break;
-        }
-    }
+	while ((read = getline(&line, &len, save)) != -1)
+	{
+		i++;
+		if (i == select)
+		{
+			board = createPlateauFromSave(line);
+			free(line);
+			fclose(save);
+			break;
+		}
+	}
+	
 
+	game(board);
 
-    game(board);
-
-    destroyPlateau(board);
+	destroyPlateau(board);
 }

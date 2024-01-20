@@ -6,6 +6,6 @@
 #include "game.h"
 
 void displayMenu();
-void menu();
+int menu();
 
 #endif /* __MENU__H__ */

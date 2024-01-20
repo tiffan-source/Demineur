@@ -5,7 +5,9 @@
 #include "error.h"
 #include "lib.h"
 
-#define DEFAULT_PERCENTAGE_OF_MINE 0.5
+#define DEFAULT_PERCENTAGE_OF_MINE 0.1
+#define DEFAULT_WIDTH 9
+#define DEFAULT_HEIGHT 9
 
 enum {INIT, INPROGRESS, WIN, LOSE, ENDBYUSER};
 
@@ -15,7 +17,7 @@ struct plateau
 	int height;
 	int state;
     int goalReveal;
-    int duree;
+    double duree;
 	Square **grid;
 };
 
@@ -24,9 +26,14 @@ typedef struct plateau Plateau;
 void pushPlateau(Plateau *plateau);
 void popPlateau(Plateau *plateau);
 
+void setPlateauSettings(int *width, int *height);
+void setCustomePlateauSettings(int *width, int *height);
 
-Plateau *createPlateau(int width, int height);
+
+Plateau *createPlateau();
 Plateau *createPlateauFromSave(const char *saveLine);
+
+
 
 Plateau *fillPlateauWithMine(Plateau *plateau);
 
