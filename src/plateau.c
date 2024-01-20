@@ -86,7 +86,6 @@ void destroyPlateau(Plateau* board)
 	free(board);
 }
 
-// Ajouter balisage de la grille
 
 /**
  * displayPlateau - display the board 
@@ -97,12 +96,11 @@ void destroyPlateau(Plateau* board)
  */
 void displayPlateau(Plateau *plateau)
 {
-	int i;
-	int j;
+	int i, j;
 
-	// system("clear");
+	system("clear");
+        printf(" ");
 
-	printf(" ");
 	for (j = 0; j < plateau->width; j++)
 	{
 		printf(" %c ", j + 'A');
@@ -116,24 +114,24 @@ void displayPlateau(Plateau *plateau)
 			if (j == 0)
 				printf("%d", i);
             
-            if (plateau->grid[i][j].flag)
-            {
-                printf("|F|");
-            }
-            else
-            {
-                if (plateau->grid[i][j].state == EMPTY || plateau->grid[i][j].state == MINE)
-                {
-                    printf("| |");
-                }
-                else
-                {
-                    printf("|%c|", plateau->grid[i][j].state);
-                }
-            }
-        }
-        printf("\n");
-    }
+			if (plateau->grid[i][j].flag)
+			{
+				printf("|F|");
+			}
+			else
+			{
+				if (plateau->grid[i][j].state == EMPTY || plateau->grid[i][j].state == MINE)
+				{
+					printf("| |");
+				}
+				else
+				{
+					printf("|%c|", plateau->grid[i][j].state);
+				}
+			}
+		}
+		printf("\n");
+	}
 }
 
 /**
@@ -162,34 +160,35 @@ Plateau *fillPlateauWithMine(Plateau *plateau)
 		plateau->grid[y][x].state = MINE;
 	}
 
-    plateau->goalReveal -= numberOfMine;
+	plateau->goalReveal -= numberOfMine;
 
 	return (plateau);
 }
 
+
 Plateau *createPlateauFromSave(const char *saveLine)
 {
-    Plateau *newPlateau = NULL;
-    int i, j, testAssign;
-    int width, height, state, goal;
-    char caseData[256];
+	Plateau *newPlateau = NULL;
+	int i, j, testAssign;
+	int width, height, state, goal;
+	char caseData[256];
 
-    newPlateau = (Plateau*) malloc(sizeof(Plateau));
+	newPlateau = (Plateau*) malloc(sizeof(Plateau));
 
-    if (newPlateau == NULL)
-        memoryError();
+	if (newPlateau == NULL)
+		memoryError();
 
-    testAssign = sscanf(saveLine, "%d %d %d %d %s", &width, &height, &state, &goal, caseData);
+	testAssign = sscanf(saveLine, "%d %d %d %d %s", &width, &height, &state, &goal, caseData);
 
-    newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
+	newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
+	
+	if (newPlateau->grid == NULL)
+	{
+		free(newPlateau);
+		memoryError();
+	}
 
-    if (newPlateau->grid == NULL)
-    {
-        free(newPlateau);
-        memoryError();
-    }
-
-    for (i = 0; i < height; i++)
+	for (i = 0; i < height; i++)
 	{
 		newPlateau->grid[i] = (Square *)malloc(sizeof(Square) * width);
 
