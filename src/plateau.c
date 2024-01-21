@@ -3,82 +3,79 @@
 
 void setCustomePlateauSettings(int *width, int *height)
 {
-    int choiceWidth;
-    int choiceHeight;
+	int choiceWidth;
+	int choiceHeight;
 
-    system("clear");
+	system("clear");
 
-    printf("Veuillez choisir la taille du plateau de jeu :\n");
+	printf("Veuillez choisir la taille du plateau de jeu :\n");
 
-    while (scanf("%d", &choiceWidth) != 1 || choiceWidth < 1 || choiceWidth > 26)
-    {
-        printf("Veuillez choisir la largeur du plateau de jeu (1-26) :\n");
-        while (getchar() != '\n');
-    }
+	while (scanf("%d", &choiceWidth) != 1 || choiceWidth < 1 || choiceWidth > 26)
+	{
+		printf("Veuillez choisir la largeur du plateau de jeu (1-26) :\n");
+		clearBuff(); /** clear out buffer */
+	}
 
-    while (scanf("%d", &choiceHeight) != 1 || choiceHeight < 1 || choiceHeight > 26)
-    {
-        printf("Veuillez choisir la hauteur du plateau de jeu (1-26) :\n");
-        while (getchar() != '\n');
-    }
-
-    *width = choiceWidth;
-    *height = choiceHeight;
-            
+	while (scanf("%d", &choiceHeight) != 1 || choiceHeight < 1 || choiceHeight > 26)
+	{
+		printf("Veuillez choisir la hauteur du plateau de jeu (1-26) :\n");
+		clearBuff();  /** clear out buffer */
+	}
+	
+	*width = choiceWidth;
+	*height = choiceHeight;
 }
 
 void setPlateauSettings(int *width, int *height)
 {
-    char choice[256];
+	char choice[256];
 
-    system("clear");
+	system("clear");
 
-    printf("Veuillez choisir la taille du plateau de jeu :\n");
-    printf("1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    printf("2 - Moyen (16x16)\n");
-    printf("3 - Grand (26x16)\n");
-    printf("4 - Personnalisé\n");
+	printf("Veuillez choisir la taille du plateau de jeu :\n");
+	printf("1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	printf("2 - Moyen (16x16)\n");
+	printf("3 - Grand (26x16)\n");
+	printf("4 - Personnalisé\n");
 
-    scanf("%s", choice);
-    if (strlen(choice) > 1)
-    {
-        optionNotRecognized();
-        setPlateauSettings(width, height);
-        return;
-    }
+	scanf("%s", choice);
+	if (strlen(choice) > 1)
+	{
+		optionNotRecognized();
+		setPlateauSettings(width, height);
+		return;
+	}
     
 
-    switch (choice[0])
-    {
+	switch (choice[0])
+	{
         case '1':
-            *width = DEFAULT_WIDTH;
-            *height = DEFAULT_HEIGHT;
-            break;
+		*width = DEFAULT_WIDTH;
+		*height = DEFAULT_HEIGHT;
+		break;
         case '2':
-            *width = 16;
-            *height = 16;
-            break;
+		*width = 16;
+		*height = 16;
+		break;
         case '3':
-            *width = 26;
-            *height = 16;
-            break;
+		*width = 26;
+		*height = 16;
+		break;
         case '4':
-            setCustomePlateauSettings(width, height);
-            break;
+		setCustomePlateauSettings(width, height);
+		break;
 
         default:
-            optionNotRecognized();
-            setPlateauSettings(width, height);
-            break;
-    }
-
+		optionNotRecognized();
+		setPlateauSettings(width, height);
+		break;
+	}
+	
 }
 
 /**
  * createPlateau - create a the board game
- * @height: the height of the board
- * @width: width of the board
- *
+ * 
  * description: function to create and initilize a board game
  * Return: the newlly created board
  */
@@ -87,10 +84,10 @@ Plateau *createPlateau()
 	Plateau *newPlateau = NULL;
 	int i;
 	int j;
-    int height = DEFAULT_HEIGHT;
-    int width = DEFAULT_WIDTH;
+	int height = DEFAULT_HEIGHT;
+	int width = DEFAULT_WIDTH;
 
-    setPlateauSettings(&width, &height);
+	setPlateauSettings(&width, &height);
 
 	newPlateau = (Plateau *)malloc(sizeof(Plateau));
 
@@ -136,8 +133,8 @@ Plateau *createPlateau()
 	newPlateau->height = height;
 	newPlateau->width = width;
 	newPlateau->state = INIT;
-    newPlateau->goalReveal = height * width;
-    newPlateau->duree = 0;
+	newPlateau->goalReveal = height * width;
+	newPlateau->duree = 0;
 	
 	return (newPlateau);
 }
@@ -150,7 +147,7 @@ Plateau *createPlateau()
  * at the beginning
  * Return: a type void element
  */
-void destroyPlateau(Plateau* board)
+void destroyPlateau(Plateau *board)
 {
 	int i;
 
@@ -164,7 +161,6 @@ void destroyPlateau(Plateau* board)
 	free(board);
 }
 
-// Ajouter balisage de la grille
 
 /**
  * displayPlateau - display the board 
@@ -175,12 +171,11 @@ void destroyPlateau(Plateau* board)
  */
 void displayPlateau(Plateau *plateau)
 {
-	int i;
-	int j;
+	int i, j;
 
-	// system("clear");
+	system("clear");
+        printf(" ");
 
-	printf(" ");
 	for (j = 0; j < plateau->width; j++)
 	{
 		printf(" %c ", j + 'A');
@@ -194,24 +189,24 @@ void displayPlateau(Plateau *plateau)
 			if (j == 0)
 				printf("%d", i);
             
-            if (plateau->grid[i][j].flag)
-            {
-                printf("|F|");
-            }
-            else
-            {
-                if (plateau->grid[i][j].state == EMPTY || plateau->grid[i][j].state == MINE)
-                {
-                    printf("| |");
-                }
-                else
-                {
-                    printf("|%c|", plateau->grid[i][j].state);
-                }
-            }
-        }
-        printf("\n");
-    }
+			if (plateau->grid[i][j].flag)
+			{
+				printf("|F|");
+			}
+			else
+			{
+				if (plateau->grid[i][j].state == EMPTY || plateau->grid[i][j].state == MINE)
+				{
+					printf("| |");
+				}
+				else
+				{
+					printf("|%c|", plateau->grid[i][j].state);
+				}
+			}
+		}
+		printf("\n");
+	}
 }
 
 /**
@@ -240,7 +235,7 @@ Plateau *fillPlateauWithMine(Plateau *plateau)
 		plateau->grid[y][x].state = MINE;
 	}
 
-    plateau->goalReveal -= numberOfMine;
+	plateau->goalReveal -= numberOfMine;
 
 	return (plateau);
 }
@@ -254,27 +249,27 @@ Plateau *fillPlateauWithMine(Plateau *plateau)
  */
 Plateau *createPlateauFromSave(const char *saveLine)
 {
-    Plateau *newPlateau = NULL;
-    int i, j, testAssign;
-    int width, height, state, goal;
-    char caseData[256];
+	Plateau *newPlateau = NULL;
+	int i, j, testAssign;
+	int width, height, state, goal;
+	char caseData[256];
 
-    newPlateau = (Plateau*) malloc(sizeof(Plateau));
+	newPlateau = (Plateau*) malloc(sizeof(Plateau));
 
-    if (newPlateau == NULL)
-        memoryError();
+	if (newPlateau == NULL)
+		memoryError();
 
-    testAssign = sscanf(saveLine, "%d %d %d %d %s", &width, &height, &state, &goal, caseData);
+	testAssign = sscanf(saveLine, "%d %d %d %d %s", &width, &height, &state, &goal, caseData);
 
-    newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
+	newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
+	
+	if (newPlateau->grid == NULL)
+	{
+		free(newPlateau);
+		memoryError();
+	}
 
-    if (newPlateau->grid == NULL)
-    {
-        free(newPlateau);
-        memoryError();
-    }
-
-    for (i = 0; i < height; i++)
+	for (i = 0; i < height; i++)
 	{
 		newPlateau->grid[i] = (Square *)malloc(sizeof(Square) * width);
 
@@ -296,30 +291,26 @@ Plateau *createPlateauFromSave(const char *saveLine)
 		}
 	}
 
-    for (i = 0; i < height; i++)
-    {
-        for (j = 0; j < width; j++)
-        {
-            if (caseData[width*i*2+2*j] == 'M')
-            {
-                newPlateau->grid[i][j].state = MINE;
+	for (i = 0; i < height; i++)
+	{
+		for (j = 0; j < width; j++)
+		{
+			if (caseData[width * i * 2 + 2 * j] == 'M')
+			{
+				newPlateau->grid[i][j].state = MINE;
+				newPlateau->grid[i][j].flag = caseData[width*i*2+2*j + 1] == 'F' ? 1 : 0;
+			}
+			else if(caseData[width * i * 2 + 2 * j] != '_')
+			{
+				newPlateau->grid[i][j].state = caseData[width*i*2+2*j];
+			}
+		}
+	}
 
-                newPlateau->grid[i][j].flag = caseData[width*i*2+2*j + 1] == 'F' ? 1 : 0;
-                
-            }
-            else if(caseData[width*i*2+2*j] != '_')
-            {
-                newPlateau->grid[i][j].state = caseData[width*i*2+2*j];
-            }
-        }
-    }
+	newPlateau->height = height;
+	newPlateau->width = width;
+	newPlateau->state = INPROGRESS;
+	newPlateau->goalReveal = goal;
 
-    newPlateau->height = height;
-    newPlateau->width = width;
-    newPlateau->state = INPROGRESS;
-    newPlateau->goalReveal = goal;
-
-    return newPlateau;
-    
-    
+	return (newPlateau);
 }
