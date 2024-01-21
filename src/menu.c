@@ -23,18 +23,14 @@ void displayMenu()
  */
 int menu()
 {
-	char select[256];
+	char select;
 
 	displayMenu();
 
-	scanf("%s", select);
-	if (strlen(select) > 1)
-	{
-		optionNotRecognized();
-		return (1);
-	}
+        scanf("%c", &select);
+        clearBuff();
 
-	switch (select[0])
+	switch (select)
 	{
 	case '1':
 		startGame();
@@ -45,9 +41,11 @@ int menu()
 		loadGame();
 		return (1);
 		break;
+    
         case '3':
 		return (0);
 		break;
+
 	default:
 		optionNotRecognized();
 		return (1);

@@ -34,7 +34,7 @@ void optionNotRecognized()
 void memoryError()
 {
 	printf("Memory error");
-	exit(EXIT_FAILURE);
+	exit(1);
 }
 
 /**

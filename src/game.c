@@ -1,212 +1,6 @@
 #include "game.h"
+#include "action.h"
 
-
-int countMinesAround(int x, int y, Plateau* plateau)
-{
-    int number = 0;
-
-    // Coin superieur gauche
-    if ((x - 1) >= 0 && (y - 1) >= 0 && plateau->grid[y - 1][x - 1].state == MINE)
-    {
-        number++;
-    }
-
-    // Haut
-    if ((y - 1) >= 0 && plateau->grid[y - 1][x].state == MINE)
-    {
-        number++;
-    }
-
-    // Coin superieur droit
-    if ((x + 1) < plateau->width && (y - 1) >= 0 && plateau->grid[y - 1][x + 1].state == MINE)
-    {
-        number++;
-    }
-
-    // Droite
-    if ((x - 1) >= 0 && plateau->grid[y][x - 1].state == MINE)
-    {
-        number++;
-    }
-
-    // Gauche
-    if ((x + 1) < plateau->width && plateau->grid[y][x + 1].state == MINE)
-    {
-        number++;
-    }
-
-    // Coin inferieur gauche
-    if ((x - 1) >= 0 && (y + 1) < plateau->height && plateau->grid[y + 1][x - 1].state == MINE)
-    {
-        number++;
-    }
-
-    // Bas
-    if ((y + 1) < plateau->height && plateau->grid[y + 1][x].state == MINE)
-    {
-        number++;
-    }
-
-    // Coin inferieur droit
-    if ((x + 1) < plateau->width && (y + 1) < plateau->height && plateau->grid[y + 1][x + 1].state == MINE)
-    {
-        number++;
-    }
-
-    return number;
-}
-
-
-Plateau* revealSquare(int x, int y, Plateau *plateau)
-{
-	int count = countMinesAround(x, y, plateau);
-
-	if (plateau->grid[y][x].state == MINE)
-	{
-		plateau->state = LOSE;
-		return (plateau);
-	}
-
-	if (plateau->grid[y][x].flag == 1)
-	{
-		return (plateau);
-	}
-
-	plateau->grid[y][x].state = '0' + count;
-	plateau->goalReveal--;
-	plateau->grid[y][x].resolve = 1;
-
-	if (count == 0)
-	{
-        // Coin superieur gauche
-		if ((x - 1) >= 0 && (y - 1) >= 0 && plateau->grid[y - 1][x - 1].resolve == 0)
-        {
-		revealSquare(x - 1, y - 1, plateau);
-        }
-
-		// Haut
-		if ((y - 1) >= 0 && plateau->grid[y - 1][x].resolve == 0)
-        {
-		revealSquare(x, y - 1, plateau);
-        }
-
-		// Coin superieur droit
-		if ((x + 1) < plateau->width && (y - 1) >= 0 && plateau->grid[y - 1][x + 1].resolve == 0)
-		{
-			revealSquare(x + 1, y - 1, plateau);
-		}
-
-		// Droite
-		if ((x - 1) >= 0 && plateau->grid[y][x - 1].resolve == 0)
-		{
-			revealSquare(x - 1, y, plateau);
-		}
-
-		// Gauche
-		if ((x + 1) < plateau->width && plateau->grid[y][x + 1].resolve == 0)
-		{
-			revealSquare(x + 1, y, plateau);
-		}
-		
-		// Coin inferieur gauche
-		if ((x - 1) >= 0 && (y + 1) < plateau->height && plateau->grid[y + 1][x - 1].resolve == 0)
-		{
-			revealSquare(x - 1, y + 1, plateau);
-		}
-
-		// Bas
-		if ((y + 1) < plateau->height && plateau->grid[y + 1][x].resolve == 0)
-		{
-			revealSquare(x, y + 1, plateau);
-		}
-
-		// Coin inferieur droit
-		if ((x + 1) < plateau->width && (y + 1) < plateau->height && plateau->grid[y + 1][x + 1].resolve == 0)
-		{
-			revealSquare(x + 1, y + 1, plateau);
-		}
-		
-	}
-	
-	return (plateau);
-}
-
-
-/**
- * checkCoord - check board coordonates
- * @x: x coordonate
- * @y: y coordonate
- *
- * description: check board coordonate given by the user
- * Return: 1 if everything is ok, 0 otherwise
- */
-int checkCoord(int x, int y, Plateau* board)
-{
-	if (x < 0 || x >= board->width || y < 0 || y >= board->height)
-		return (0);
-	return (1);
-}
-
-Plateau* placeFlag(int x, int y, Plateau* board)
-{
-	board->grid[y][x].flag = board->grid[y][x].flag ? 0 : 1;
-
-	return (board);
-}
-
-/**
- * makeAction - apply some actions on the board
- * @board: the board to manipulate
- *
- * description: function to display, check, and apply
- * actions on @board
- * Return: the board
- */
-Plateau *makeAction(Plateau *board)
-{
-	char action[5];
-	printf("Entrez une action (action X Y) ou Q pour retourner au menu\n");
-	listeAction();
-	fflush(stdin); // clear out buffer input
-	fgets(action, 5, stdin);
-
-	printf("action = %s\n", action);
-	
-	if ((action[0] == 'F' || action[0] == 'R') && !checkCoord(action[1] - 'A', action[2] - '0', board))
-	{
-		coordError();
-		return (board);
-	}
-
-	switch (action[0])
-	{
-        case 'R':
-		board = revealSquare(action[1] - 'A', action[2] - '0', board);
-        break;
-
-        case 'F':
-		board = placeFlag(action[1] - 'A', action[2] - '0', board);
-		break;
-
-        case 'Q':
-		board->state = ENDBYUSER;
-		break;
-
-        case 'S':
-		saveGame(board);
-		board->state = ENDBYUSER;
-
-        case 'T':
-		resolePlateau(board);
-		break;
-
-        default:
-		optionNotRecognized();
-		break;
-	}
-
-	return (board);
-}
 
 /**
  * checkForWin - check whether the player won
@@ -249,10 +43,13 @@ int checkForLoose(Plateau *plateau)
  * checks for user's win state, display board accordingly.
  * Return: a type void element
  */
-void game(Plateau *board)
+void game(Game *partie)
 {    
 	int endOfGame = 0;
 	time_t start, end;
+    Plateau *board = partie->board;
+	
+	
 
 	time(&start);
 
@@ -262,7 +59,7 @@ void game(Plateau *board)
 
 		displayPlateau(board);
 
-		board = makeAction(board);
+		makeAction(partie);
 
 		if (checkForWin(board))
 		{
@@ -288,11 +85,11 @@ void game(Plateau *board)
 
 	board->duree = difftime(end, start);
 
-	displayPlateau(board);
+	destroyGame(partie);
 
-	printf("Vous avez mis %d secondes pour resoudre le plateau\n", board->duree);
+	printf("Vous avez mis %f secondes pour resoudre le plateau\n", board->duree);
 
-        sleep(2);
+    sleep(2);
 }
 
 /**
@@ -302,22 +99,31 @@ void game(Plateau *board)
  */
 void startGame()
 {
-	Plateau *board = createPlateau();
 
+    Game *newGame = malloc(sizeof(Game));
+
+    if (newGame == NULL)
+    {
+        memoryError();
+    }
+    
+	Plateau *board = createPlateau();
 	board = fillPlateauWithMine(board);
 
-        game(board);
+    newGame->board = board;
 
-        destroyPlateau(board);
+    game(newGame);
+
 }
 
-void saveGame(Plateau *plateau)
+void saveGame(Game *partie)
 {
 
 	char *pwd = getenv("PWD");
 	char filePath[256];
 	FILE *saveFile;
 	int i, j;
+    Plateau *plateau = partie->board;
 
 	sprintf(filePath, "%s/save.txt", pwd);
 
@@ -364,40 +170,6 @@ void saveGame(Plateau *plateau)
 	fclose(saveFile);
 }
 
-/**
- * listeAction - list game differents possible actions
- *
- * Return: a type void element
- */
-void listeAction()
-{
-	printf("Voici les differentes actions possibles\n");
-	printf("R: Afficher le vrai contenu des cases\n");
-	printf("F: Placer un Flag sur une case\n");
-	printf("S: Sauvegarder le jeux dans un fichier\n");
-	printf("T: Résoudre le jeux\n");
-	printf("Q: Quitter la partie\n");
-
-	printf("Exemple: \n");
-
-	printf("FC4");
-}
-
-void resolePlateau(Plateau *plateau)
-{
-	int i, j;
-
-	for (i = 0; i < plateau->height; i++)
-	{
-		for (j = 0; j < plateau->width; j++)
-		{
-			if (plateau->grid[i][j].state == MINE)
-			{
-				plateau->grid[i][j].flag = 1;
-			}
-		}
-	}
-}
 
 int selectGame()
 {
@@ -469,6 +241,13 @@ void loadGame()
 	char* pwd = getenv("PWD");
 	char filePath[256];
 	Plateau* board;
+    Game *partie = malloc(sizeof(Game));
+
+    if (partie == NULL)
+    {
+        memoryError();
+    }
+    
 
 	sprintf(filePath, "%s/save.txt", pwd);
 
@@ -491,9 +270,17 @@ void loadGame()
 			break;
 		}
 	}
+
+    partie->board = board;
 	
 
-	game(board);
+	game(partie);
 
-	destroyPlateau(board);
+	
+}
+
+void destroyGame(Game *partie)
+{
+    destroyPlateau(partie->board);
+    free(partie);
 }
