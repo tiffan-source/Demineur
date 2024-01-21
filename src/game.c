@@ -8,11 +8,11 @@
  *
  * Return: an int type
  */
-int checkForWin(Plateau *plateau)
+int checkForWin(Game *partie)
 {
-	if (plateau->goalReveal == 0)
+	if (partie->board->goalReveal == 0)
 	{
-		plateau->state = WIN;
+		partie->state = WIN;
 		return (1);
 	}
 	return (0);
@@ -24,15 +24,44 @@ int checkForWin(Plateau *plateau)
  *
  * Return: an int type
  */
-int checkForLoose(Plateau *plateau)
+int checkForLoose(Game *partie)
 {
-	if (plateau->state == LOSE)
+	if (partie->state == LOSE)
 	{
 		return (1);
 	}
-
 	return (0);
 
+}
+
+char* tempsEcoule(double secondes) {
+    int heures, minutes, secondesRestantes;
+    
+    heures = (int)(secondes / 3600);
+    minutes = ((int)secondes % 3600) / 60;
+    secondesRestantes = (int)secondes % 60;
+
+    // Allouer une chaîne de caractères pour stocker le résultat
+    char* resultat = (char*)malloc(12 * sizeof(char));  // "xH:yM:zS\0" nécessite 12 caractères
+
+    // Formater le résultat
+    snprintf(resultat, 12, "%02dH:%02dM:%02dS", heures, minutes, secondesRestantes);
+
+    return resultat;
+}
+
+void whatHappensAtEnd(Game *partie){
+	char *tempsEcouleFormate = tempsEcoule(partie->duree);
+	time(&partie->endTime);
+
+	partie->duree = difftime(partie->endTime, partie->startTime);
+	
+
+	destroyGame(partie);
+
+	printf("Vous avez mis %s secondes pour resoudre le plateau\n", tempsEcouleFormate);
+
+    sleep(2);
 }
 
 /**
@@ -55,41 +84,31 @@ void game(Game *partie)
 
 	while (endOfGame == 0)
 	{
-		board->state = INPROGRESS;
+		partie->state = INPROGRESS;
 
 		displayPlateau(board);
 
 		makeAction(partie);
 
-		if (checkForWin(board))
+		if (checkForWin(partie))
 		{
 			displayPlateau(board);
-			printf("Vous avez gagne\n");
 			endOfGame = 1;
 		}
 
-		if (checkForLoose(board))
+		if (checkForLoose(partie))
 		{
 			displayPlateau(board);
-			printf("Vous avez perdu\n");
 			endOfGame = 1;
 		}
 
-		if (board->state == ENDBYUSER)
+		if (partie->state == ENDBYUSER)
 		{
 			endOfGame = 1;
 		}
 	}
 
-	time(&end);
-
-	board->duree = difftime(end, start);
-
-	destroyGame(partie);
-
-	printf("Vous avez mis %f secondes pour resoudre le plateau\n", board->duree);
-
-    sleep(2);
+	whatHappensAtEnd(partie);
 }
 
 /**
@@ -106,6 +125,8 @@ void startGame()
     {
         memoryError();
     }
+
+	time(&(newGame->startTime));
     
 	Plateau *board = createPlateau();
 	board = fillPlateauWithMine(board);
@@ -125,6 +146,9 @@ void saveGame(Game *partie)
 	int i, j;
     Plateau *plateau = partie->board;
 
+	time(&(partie->startTime));
+	partie->duree = difftime(partie->endTime, partie->startTime);
+
 	sprintf(filePath, "%s/save.txt", pwd);
 
 	saveFile = fopen(filePath, "a+");
@@ -135,7 +159,7 @@ void saveGame(Game *partie)
 		exit(1);
 	}
 
-	fprintf(saveFile, "%d %d %d %d ", plateau->width, plateau->height, plateau->state, plateau->goalReveal);
+	fprintf(saveFile, "%d %d %d %f ", plateau->width, plateau->height, plateau->goalReveal, partie->duree);
     
 	for (i = 0; i < plateau->height; i++)
 	{
@@ -168,6 +192,8 @@ void saveGame(Game *partie)
 	}
 	fprintf(saveFile, "\n");
 	fclose(saveFile);
+
+	partie->state = SAVE;
 }
 
 

@@ -9,13 +9,11 @@
 #define DEFAULT_WIDTH 9
 #define DEFAULT_HEIGHT 9
 
-enum {INIT, INPROGRESS, WIN, LOSE, ENDBYUSER};
 
 struct plateau
 {
 	int width;
 	int height;
-	int state;
     int goalReveal;
     double duree;
 	Square **grid;

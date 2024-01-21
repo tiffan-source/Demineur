@@ -6,7 +6,7 @@ void setCustomePlateauSettings(int *width, int *height)
 	int choiceWidth;
 	int choiceHeight;
 
-	system("clear");
+	// system("clear");
 
 	printf("Veuillez choisir la taille du plateau de jeu :\n");
 
@@ -30,7 +30,7 @@ void setPlateauSettings(int *width, int *height)
 {
 	char choice[256];
 
-	system("clear");
+	// system("clear");
 
 	printf("Veuillez choisir la taille du plateau de jeu :\n");
 	printf("1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -132,7 +132,6 @@ Plateau *createPlateau()
 
 	newPlateau->height = height;
 	newPlateau->width = width;
-	newPlateau->state = INIT;
 	newPlateau->goalReveal = height * width;
 	newPlateau->duree = 0;
 	
@@ -173,8 +172,9 @@ void displayPlateau(Plateau *plateau)
 {
 	int i, j;
 
-	system("clear");
-        printf(" ");
+	// system("clear");
+	
+    printf("  ");
 
 	for (j = 0; j < plateau->width; j++)
 	{
@@ -186,8 +186,14 @@ void displayPlateau(Plateau *plateau)
 	{
 		for (j = 0; j < plateau->width; j++)
 		{
-			if (j == 0)
-				printf("%d", i);
+			if (j == 0 ){
+				if(i <= 9){
+					printf(" %d", i);
+				}
+				else{
+					printf("%d", i);
+				}
+			}
             
 			if (plateau->grid[i][j].flag)
 			{
@@ -309,7 +315,6 @@ Plateau *createPlateauFromSave(const char *saveLine)
 
 	newPlateau->height = height;
 	newPlateau->width = width;
-	newPlateau->state = INPROGRESS;
 	newPlateau->goalReveal = goal;
 
 	return (newPlateau);
