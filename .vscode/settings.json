@@ -9,6 +9,8 @@
         "plateau.h": "c",
         "dirent.h": "c",
         "stdlib.h": "c",
-        "dirent_ext.h": "c"
+        "dirent_ext.h": "c",
+        "locale": "c",
+        "string": "c"
     }
 }

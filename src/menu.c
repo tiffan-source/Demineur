@@ -7,7 +7,7 @@
  */
 void displayMenu()
 {
-	system("clear");
+	// system("clear");
 	printf("DEMINEUR Menu\n");
 	printf("CHOISISSEZ VOTRE OPTION\n");
 	printf("1) Nouvelle partie\n");
@@ -23,14 +23,16 @@ void displayMenu()
  */
 int menu()
 {
-	char select;
+	char select[256];
 
 	displayMenu();
 
-        scanf("%c", &select);
-        clearBuff();
+		// clearBuff();
+        // scanf("%c", &select);
+        // clearBuff();
+		fgets(select, 256, stdin);
 
-	switch (select)
+	switch (select[0])
 	{
 	case '1':
 		startGame();

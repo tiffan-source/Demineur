@@ -2,7 +2,7 @@
 
 void sizePlateauError()
 {
-    system("clear");
+    // system("clear");
     printf("La longueur recquise est intraitable\n");
     printf("La taille maximale du plateu est de 99x99\n");
     printf("Veuillez réessayer\n");
@@ -19,7 +19,7 @@ void sizePlateauError()
  */
 void optionNotRecognized()
 {
-    system("clear");
+    // system("clear");
 	printf("Option not recognized\n");
 	printf("Please try again\n");
     sleep(1);

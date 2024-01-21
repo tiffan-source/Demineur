@@ -74,19 +74,19 @@ int countMinesAround(int x, int y, Plateau* plateau)
 
 
 
-void revealSquare(int x, int y, Plateau *plateau)
+int revealSquare(int x, int y, Plateau *plateau)
 {
 	int count;
 
 	if (plateau->grid[y][x].state == MINE)
 	{
-		plateau->state = LOSE;
-        return;
+		// plateau->state = LOSE;
+        return 0;
 	}
 
 	if (plateau->grid[y][x].flag == 1)
 	{
-		return;
+		return 1;
 	}
 
     count = countMinesAround(x, y, plateau);
@@ -146,6 +146,8 @@ void revealSquare(int x, int y, Plateau *plateau)
 		}
 		
 	}
+
+	return 1;
 }
 
 
@@ -169,6 +171,7 @@ void makeAction(Game *partie)
     char coord1;
     int coord2;
     int readResult;
+	int revealSquareState;
 
 	printf("Entrez une action (action X Y) ou Q pour retourner au menu\n");
 	listeAction();
@@ -186,6 +189,7 @@ void makeAction(Game *partie)
         readResult = scanf("%c-%c-%d", &action, &coord1, &coord2);
 
     }
+	clearBuff();
     
     Plateau *board = partie->board;
 
@@ -199,7 +203,10 @@ void makeAction(Game *partie)
 	switch (action)
 	{
         case 'R':
-		revealSquare(coord1 - 'A', coord2, board);
+		revealSquareState = revealSquare(coord1 - 'A', coord2, board);
+		if(revealSquareState == 0){
+			partie->state = LOSE;
+		}
         break;
 
         case 'F':
@@ -207,12 +214,12 @@ void makeAction(Game *partie)
 		break;
 
         case 'Q':
-		board->state = ENDBYUSER;
+		partie->state = ENDBYUSER;
 		break;
 
         case 'S':
 		saveGame(partie);
-		board->state = ENDBYUSER;
+		partie->state = SAVE;
 
         case 'T':
 		resolePlateau(board);

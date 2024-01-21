@@ -8,7 +8,7 @@
 int checkCoord(int x, int y, Plateau *board);
 void placeFlag(int x, int y, Plateau *board);
 void makeAction(Game *partie);
-void revealSquare(int x, int y, Plateau *plateau);
+int revealSquare(int x, int y, Plateau *plateau);
 void resolePlateau(Plateau *plateau);
 int countMinesAround(int x, int y, Plateau *plateau);
 void listeAction();
