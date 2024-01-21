@@ -198,12 +198,12 @@ Plateau *makeAction(Plateau *board)
 
         case 'T':
 		resolePlateau(board);
-        break;
+		break;
 
         default:
 		optionNotRecognized();
 		break;
-    }
+	}
 
 	return (board);
 }
@@ -226,6 +226,7 @@ int checkForWin(Plateau *plateau)
 
 /**
  * checkForLoose - check whether the player lost
+ * @plateau: the entire game
  *
  * Return: an int type
  */
@@ -250,46 +251,46 @@ int checkForLoose(Plateau *plateau)
  */
 void game(Plateau *board)
 {    
-    int endOfGame = 0;
-    time_t start, end;
+	int endOfGame = 0;
+	time_t start, end;
 
-    time(&start);
+	time(&start);
 
-    while (endOfGame == 0)
-    {
-	    board->state = INPROGRESS;
+	while (endOfGame == 0)
+	{
+		board->state = INPROGRESS;
 
-	    displayPlateau(board);
+		displayPlateau(board);
 
-	    board = makeAction(board);
+		board = makeAction(board);
 
-	    if (checkForWin(board))
-	    {
-		    displayPlateau(board);
-		    printf("Vous avez gagne\n");
-		    endOfGame = 1;
-	    }
+		if (checkForWin(board))
+		{
+			displayPlateau(board);
+			printf("Vous avez gagne\n");
+			endOfGame = 1;
+		}
 
-	    if (checkForLoose(board))
-	    {
-		    displayPlateau(board);
-		    printf("Vous avez perdu\n");
-		    endOfGame = 1;
-	    }
+		if (checkForLoose(board))
+		{
+			displayPlateau(board);
+			printf("Vous avez perdu\n");
+			endOfGame = 1;
+		}
 
-	    if (board->state == ENDBYUSER)
-	    {
-		    endOfGame = 1;
-	    }
-    }
+		if (board->state == ENDBYUSER)
+		{
+			endOfGame = 1;
+		}
+	}
 
-    time(&end);
+	time(&end);
 
-    board->duree = difftime(end, start);
+	board->duree = difftime(end, start);
 
-    displayPlateau(board);
+	displayPlateau(board);
 
-    printf("Vous avez mis %d secondes pour resoudre le plateau\n", board->duree);
+	printf("Vous avez mis %d secondes pour resoudre le plateau\n", board->duree);
 
         sleep(2);
 }
@@ -364,7 +365,7 @@ void saveGame(Plateau *plateau)
 }
 
 /**
- * listeAction - list differents possible actions
+ * listeAction - list game differents possible actions
  *
  * Return: a type void element
  */

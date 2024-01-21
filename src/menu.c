@@ -10,7 +10,6 @@ void displayMenu()
 	system("clear");
 	printf("DEMINEUR Menu\n");
 	printf("CHOISISSEZ VOTRE OPTION\n");
-
 	printf("1) Nouvelle partie\n");
 	printf("2) Charger une partie\n");
 	printf("3) Quitter\n");
@@ -32,7 +31,7 @@ int menu()
 	if (strlen(select) > 1)
 	{
 		optionNotRecognized();
-		return 1;
+		return (1);
 	}
 
 	switch (select[0])
@@ -44,14 +43,14 @@ int menu()
 
 	case '2':
 		loadGame();
-		return 1;
+		return (1);
 		break;
         case '3':
-		return 0;
+		return (0);
 		break;
 	default:
 		optionNotRecognized();
-        return 1;
+		return (1);
 		break;
 	}
 }

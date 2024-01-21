@@ -13,13 +13,13 @@ void setCustomePlateauSettings(int *width, int *height)
 	while (scanf("%d", &choiceWidth) != 1 || choiceWidth < 1 || choiceWidth > 26)
 	{
 		printf("Veuillez choisir la largeur du plateau de jeu (1-26) :\n");
-		while (getchar() != '\n');
+		clearBuff(); /** clear out buffer */
 	}
 
 	while (scanf("%d", &choiceHeight) != 1 || choiceHeight < 1 || choiceHeight > 26)
 	{
 		printf("Veuillez choisir la hauteur du plateau de jeu (1-26) :\n");
-		while (getchar() != '\n');
+		clearBuff();  /** clear out buffer */
 	}
 	
 	*width = choiceWidth;
@@ -28,56 +28,54 @@ void setCustomePlateauSettings(int *width, int *height)
 
 void setPlateauSettings(int *width, int *height)
 {
-    char choice[256];
+	char choice[256];
 
-    system("clear");
+	system("clear");
 
-    printf("Veuillez choisir la taille du plateau de jeu :\n");
-    printf("1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
-    printf("2 - Moyen (16x16)\n");
-    printf("3 - Grand (26x16)\n");
-    printf("4 - Personnalisé\n");
+	printf("Veuillez choisir la taille du plateau de jeu :\n");
+	printf("1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	printf("2 - Moyen (16x16)\n");
+	printf("3 - Grand (26x16)\n");
+	printf("4 - Personnalisé\n");
 
-    scanf("%s", choice);
-    if (strlen(choice) > 1)
-    {
-        optionNotRecognized();
-        setPlateauSettings(width, height);
-        return;
-    }
+	scanf("%s", choice);
+	if (strlen(choice) > 1)
+	{
+		optionNotRecognized();
+		setPlateauSettings(width, height);
+		return;
+	}
     
 
-    switch (choice[0])
-    {
+	switch (choice[0])
+	{
         case '1':
-            *width = DEFAULT_WIDTH;
-            *height = DEFAULT_HEIGHT;
-            break;
+		*width = DEFAULT_WIDTH;
+		*height = DEFAULT_HEIGHT;
+		break;
         case '2':
-            *width = 16;
-            *height = 16;
-            break;
+		*width = 16;
+		*height = 16;
+		break;
         case '3':
-            *width = 26;
-            *height = 16;
-            break;
+		*width = 26;
+		*height = 16;
+		break;
         case '4':
-            setCustomePlateauSettings(width, height);
-            break;
+		setCustomePlateauSettings(width, height);
+		break;
 
         default:
-            optionNotRecognized();
-            setPlateauSettings(width, height);
-            break;
-    }
-
+		optionNotRecognized();
+		setPlateauSettings(width, height);
+		break;
+	}
+	
 }
 
 /**
  * createPlateau - create a the board game
- * @height: the height of the board
- * @width: width of the board
- *
+ * 
  * description: function to create and initilize a board game
  * Return: the newlly created board
  */
@@ -149,7 +147,7 @@ Plateau *createPlateau()
  * at the beginning
  * Return: a type void element
  */
-void destroyPlateau(Plateau* board)
+void destroyPlateau(Plateau *board)
 {
 	int i;
 
@@ -297,12 +295,12 @@ Plateau *createPlateauFromSave(const char *saveLine)
 	{
 		for (j = 0; j < width; j++)
 		{
-			if (caseData[width*i*2+2*j] == 'M')
+			if (caseData[width * i * 2 + 2 * j] == 'M')
 			{
 				newPlateau->grid[i][j].state = MINE;
 				newPlateau->grid[i][j].flag = caseData[width*i*2+2*j + 1] == 'F' ? 1 : 0;
 			}
-			else if(caseData[width*i*2+2*j] != '_')
+			else if(caseData[width * i * 2 + 2 * j] != '_')
 			{
 				newPlateau->grid[i][j].state = caseData[width*i*2+2*j];
 			}
