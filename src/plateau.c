@@ -50,11 +50,11 @@ void setPlateauSettings(int *width, int *height)
 
 	// system("clear");
 
-	printf("Veuillez choisir la taille du plateau de jeu :\n");
-	printf("1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
-	printf("2 - Moyen (16x16)\n");
-	printf("3 - Grand (26x16)\n");
-	printf("4 - Personnalisé\n");
+	printf("\tVeuillez choisir la taille du plateau de jeu :\n");
+	printf("\t1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	printf("\t2 - Moyen (16x16)\n");
+	printf("\t3 - Grand (26x16)\n");
+	printf("\t4 - Personnalisé\n");
 
 	fgets(choice, 256, stdin);
 
@@ -225,6 +225,7 @@ void displayPlateau(Plateau *plateau)
 		}
 		printf("\n");
 	}
+	printf("\n");
 }
 
 /**
