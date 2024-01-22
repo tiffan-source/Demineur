@@ -167,6 +167,7 @@ void placeFlag(int x, int y, Plateau* board)
  */
 void makeAction(Game *partie)
 {
+    char allAction[256];
 	char action;
     char coord1;
     int coord2;
@@ -176,20 +177,19 @@ void makeAction(Game *partie)
 	printf("Entrez une action (action X Y) ou Q pour retourner au menu\n");
 	listeAction();
     // clearBuff();
-	// fgets(action, 5, stdin);
+	fgets(allAction, 256, stdin);
 
-    clearBuff();
-    readResult = scanf("%c-%c-%d", &action, &coord1, &coord2);
+    readResult = sscanf(allAction, "%c-%c-%d", &action, &coord1, &coord2);
 
     while (!(readResult == 3 || action == 'Q' || action == 'S' || action == 'T'))
     {
-        clearBuff();
         printf("Entrez une action (action X Y) ou Q pour retourner au menu\n");
         listeAction();
-        readResult = scanf("%c-%c-%d", &action, &coord1, &coord2);
+        // clearBuff();
+        fgets(allAction, 256, stdin);
+        readResult = sscanf(allAction, "%c-%c-%d", &action, &coord1, &coord2);
 
     }
-	clearBuff();
     
     Plateau *board = partie->board;
 

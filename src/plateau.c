@@ -3,27 +3,45 @@
 
 void setCustomePlateauSettings(int *width, int *height)
 {
-	int choiceWidth;
-	int choiceHeight;
+    char widthStr[256];
+    char heightStr[256];
 
-	// system("clear");
+    int validWidth = 0;
+    int validHeight = 0;
 
-	printf("Veuillez choisir la taille du plateau de jeu :\n");
+    while (!validWidth)
+    {
+        printf("Veuillez choisir la largeur du plateau de jeu (1-26) :\n");
+        fgets(widthStr, 256, stdin);
 
-	while (scanf("%d", &choiceWidth) != 1 || choiceWidth < 1 || choiceWidth > 26)
-	{
-		printf("Veuillez choisir la largeur du plateau de jeu (1-26) :\n");
-		clearBuff(); /** clear out buffer */
-	}
+        *width = atoi(widthStr);
 
-	while (scanf("%d", &choiceHeight) != 1 || choiceHeight < 1 || choiceHeight > 26)
-	{
-		printf("Veuillez choisir la hauteur du plateau de jeu (1-26) :\n");
-		clearBuff();  /** clear out buffer */
-	}
-	
-	*width = choiceWidth;
-	*height = choiceHeight;
+        if (*width >= 1 && *width <= 26)
+        {
+            validWidth = 1;
+        }
+        else
+        {
+            printf("La largeur doit être comprise entre 1 et 26.\n");
+        }
+    }
+
+    while (!validHeight)
+    {
+        printf("Veuillez choisir la hauteur du plateau de jeu (1-26) :\n");
+        fgets(heightStr, 256, stdin);
+
+        *height = atoi(heightStr);
+
+        if (*height >= 1 && *height <= 26)
+        {
+            validHeight = 1;
+        }
+        else
+        {
+            printf("La hauteur doit être comprise entre 1 et 26.\n");
+        }
+    }
 }
 
 void setPlateauSettings(int *width, int *height)
@@ -38,15 +56,9 @@ void setPlateauSettings(int *width, int *height)
 	printf("3 - Grand (26x16)\n");
 	printf("4 - Personnalisé\n");
 
-	scanf("%s", choice);
-	if (strlen(choice) > 1)
-	{
-		optionNotRecognized();
-		setPlateauSettings(width, height);
-		return;
-	}
-    
+	fgets(choice, 256, stdin);
 
+    
 	switch (choice[0])
 	{
         case '1':
@@ -244,78 +256,4 @@ Plateau *fillPlateauWithMine(Plateau *plateau)
 	plateau->goalReveal -= numberOfMine;
 
 	return (plateau);
-}
-
-/**
- * createPlateauFromSave - create a the board from the save one
- * @saveLine: the line which contains the saved game information
- *
- * description: function to create and print out the last board game
- * Return: the saved game board
- */
-Plateau *createPlateauFromSave(const char *saveLine)
-{
-	Plateau *newPlateau = NULL;
-	int i, j, testAssign;
-	int width, height, state, goal;
-	char caseData[256];
-
-	newPlateau = (Plateau*) malloc(sizeof(Plateau));
-
-	if (newPlateau == NULL)
-		memoryError();
-
-	testAssign = sscanf(saveLine, "%d %d %d %d %s", &width, &height, &state, &goal, caseData);
-
-	newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
-	
-	if (newPlateau->grid == NULL)
-	{
-		free(newPlateau);
-		memoryError();
-	}
-
-	for (i = 0; i < height; i++)
-	{
-		newPlateau->grid[i] = (Square *)malloc(sizeof(Square) * width);
-
-		if (newPlateau->grid[i] == NULL)
-		{
-			for (j = 0; j < i; j++)
-			{
-				free(newPlateau->grid[j]);
-			}
-			free(newPlateau->grid);
-			free(newPlateau);
-			memoryError();
-		}
-
-		for (j = 0; j < width; j++)
-		{
-			newPlateau->grid[i][j].state = EMPTY;
-			newPlateau->grid[i][j].flag = 0;
-		}
-	}
-
-	for (i = 0; i < height; i++)
-	{
-		for (j = 0; j < width; j++)
-		{
-			if (caseData[width * i * 2 + 2 * j] == 'M')
-			{
-				newPlateau->grid[i][j].state = MINE;
-				newPlateau->grid[i][j].flag = caseData[width*i*2+2*j + 1] == 'F' ? 1 : 0;
-			}
-			else if(caseData[width * i * 2 + 2 * j] != '_')
-			{
-				newPlateau->grid[i][j].state = caseData[width*i*2+2*j];
-			}
-		}
-	}
-
-	newPlateau->height = height;
-	newPlateau->width = width;
-	newPlateau->goalReveal = goal;
-
-	return (newPlateau);
 }

@@ -25,5 +25,7 @@ int checkForWin(Game *partie);
 int checkForLoose(Game *partie);
 void saveGame(Game *partie);
 void destroyGame(Game *partie);
+Game *createGameFromSave(const char *saveLine);
+
 
 #endif /* __GAME__H__ */

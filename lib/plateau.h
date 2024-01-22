@@ -29,7 +29,6 @@ void setCustomePlateauSettings(int *width, int *height);
 
 
 Plateau *createPlateau();
-Plateau *createPlateauFromSave(const char *saveLine);
 
 
 

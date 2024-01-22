@@ -42,24 +42,43 @@ char* tempsEcoule(double secondes) {
     secondesRestantes = (int)secondes % 60;
 
     // Allouer une chaîne de caractères pour stocker le résultat
-    char* resultat = (char*)malloc(12 * sizeof(char));  // "xH:yM:zS\0" nécessite 12 caractères
+    char* resultat = (char*)malloc(24 * sizeof(char));  // "xH:yM:zS\0" nécessite 12 caractères
 
     // Formater le résultat
-    snprintf(resultat, 12, "%02dH:%02dM:%02dS", heures, minutes, secondesRestantes);
+    snprintf(resultat, 24, "%02dh:%02dm:%02ds", heures, minutes, secondesRestantes);
 
     return resultat;
 }
 
 void whatHappensAtEnd(Game *partie){
-	char *tempsEcouleFormate = tempsEcoule(partie->duree);
-	time(&partie->endTime);
+	char *tempsEcouleFormate;
+	time(&(partie->endTime));
 
 	partie->duree = difftime(partie->endTime, partie->startTime);
-	
+	tempsEcouleFormate = tempsEcoule(partie->duree);
 
 	destroyGame(partie);
 
-	printf("Vous avez mis %s secondes pour resoudre le plateau\n", tempsEcouleFormate);
+    if (partie->state == WIN)
+    {
+        printf("Vous avez gagne en %s\n", tempsEcouleFormate);
+    }
+    else if (partie->state == LOSE)
+    {
+        printf("Vous avez perdu apres %s\n", tempsEcouleFormate);
+    }
+    else if (partie->state == SAVE)
+    {
+        printf("Partie sauvegardee\n");
+    }
+    else if (partie->state == ENDBYUSER)
+    {
+        printf("Partie terminee par l'utilisateur\n");
+    }
+    
+    
+
+	free(tempsEcouleFormate);
 
     sleep(2);
 }
@@ -75,12 +94,9 @@ void whatHappensAtEnd(Game *partie){
 void game(Game *partie)
 {    
 	int endOfGame = 0;
-	time_t start, end;
     Plateau *board = partie->board;
 	
-	
-
-	time(&start);
+	time(&(partie->startTime));
 
 	while (endOfGame == 0)
 	{
@@ -102,7 +118,7 @@ void game(Game *partie)
 			endOfGame = 1;
 		}
 
-		if (partie->state == ENDBYUSER)
+		if (partie->state == ENDBYUSER || partie->state == SAVE)
 		{
 			endOfGame = 1;
 		}
@@ -146,7 +162,7 @@ void saveGame(Game *partie)
 	int i, j;
     Plateau *plateau = partie->board;
 
-	time(&(partie->startTime));
+	time(&(partie->endTime));
 	partie->duree = difftime(partie->endTime, partie->startTime);
 
 	sprintf(filePath, "%s/save.txt", pwd);
@@ -266,14 +282,8 @@ void loadGame()
 	int read, i = 0;
 	char* pwd = getenv("PWD");
 	char filePath[256];
-	Plateau* board;
-    Game *partie = malloc(sizeof(Game));
+    Game *partie = NULL;
 
-    if (partie == NULL)
-    {
-        memoryError();
-    }
-    
 
 	sprintf(filePath, "%s/save.txt", pwd);
 
@@ -290,18 +300,14 @@ void loadGame()
 		i++;
 		if (i == select)
 		{
-			board = createPlateauFromSave(line);
+			partie = createGameFromSave(line);
 			free(line);
 			fclose(save);
 			break;
 		}
-	}
-
-    partie->board = board;
-	
+	}	
 
 	game(partie);
-
 	
 }
 
@@ -309,4 +315,100 @@ void destroyGame(Game *partie)
 {
     destroyPlateau(partie->board);
     free(partie);
+}
+
+
+/**
+ * createPlateauFromSave - create a the board from the save one
+ * @saveLine: the line which contains the saved game information
+ *
+ * description: function to create and print out the last board game
+ * Return: the saved game board
+ */
+Game *createGameFromSave(const char *saveLine)
+{
+    Game *newGame = NULL;
+	Plateau *newPlateau = NULL;
+	int i, j, testAssign;
+	int width, height, state, goal;
+    double duree;
+	char caseData[2048];
+
+
+    newGame = (Game *)malloc(sizeof(Game));
+
+    if (newGame == NULL)
+    {
+        memoryError();
+    }
+
+	newPlateau = (Plateau*) malloc(sizeof(Plateau));
+
+	if (newPlateau == NULL)
+		memoryError();
+
+	testAssign = sscanf(saveLine, "%d %d %d %f %s", &width, &height, &goal, &duree, caseData);
+
+	newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
+	
+	if (newPlateau->grid == NULL)
+	{
+		free(newPlateau);
+		memoryError();
+	}
+
+	for (i = 0; i < height; i++)
+	{
+		newPlateau->grid[i] = (Square *)malloc(sizeof(Square) * width);
+
+		if (newPlateau->grid[i] == NULL)
+		{
+			for (j = 0; j < i; j++)
+			{
+				free(newPlateau->grid[j]);
+			}
+			free(newPlateau->grid);
+			free(newPlateau);
+			memoryError();
+		}
+
+		for (j = 0; j < width; j++)
+		{
+			newPlateau->grid[i][j].state = EMPTY;
+			newPlateau->grid[i][j].flag = 0;
+		}
+	}
+
+	for (i = 0; i < height; i++)
+	{
+		for (j = 0; j < width; j++)
+		{
+			if (caseData[width * i * 2 + 2 * j] == 'M')
+			{
+				newPlateau->grid[i][j].state = MINE;
+				newPlateau->grid[i][j].flag = caseData[width*i*2+2*j + 1] == 'F' ? 1 : 0;
+			}
+			else if(caseData[width * i * 2 + 2 * j] != '_')
+			{
+                if (caseData[width*i*2+2*j] == 'F')
+                {
+                    newPlateau->grid[i][j].flag = 1;
+                }
+                else
+                {
+                    newPlateau->grid[i][j].state = caseData[width*i*2+2*j];
+                }
+			}
+		}
+	}
+
+	newPlateau->height = height;
+	newPlateau->width = width;
+	newPlateau->goalReveal = goal;
+
+    newGame->board = newPlateau;
+    newGame->state = INPROGRESS;
+    newGame->duree = duree;
+
+    return (newGame);
 }
