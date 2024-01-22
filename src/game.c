@@ -54,7 +54,7 @@ void whatHappensAtEnd(Game *partie){
 	char *tempsEcouleFormate;
 	time(&(partie->endTime));
 
-	partie->duree = difftime(partie->endTime, partie->startTime);
+	partie->duree += difftime(partie->endTime, partie->startTime);
 	tempsEcouleFormate = tempsEcoule(partie->duree);
 
 	destroyGame(partie);
@@ -143,6 +143,7 @@ void startGame()
     }
 
 	time(&(newGame->startTime));
+    newGame->duree = 0;
     
 	Plateau *board = createPlateau();
 	board = fillPlateauWithMine(board);
@@ -219,7 +220,8 @@ int selectGame()
 	char *line = NULL;
 	int read;
 	size_t len;
-	int i = 0, toReveal, w, h, s, select;
+	int i = 0, toReveal, w, h, s;
+    char select[256];
 
 	printf("Choisissez une partie a charger\n");
 
@@ -258,13 +260,13 @@ int selectGame()
 
 	do
 	{
-		scanf("%d", &select);
-		if (select < 1 || select > i)
+        fgets(select, 256, stdin);
+		if (atoi(select) < '1' || atoi(select) > i)
 		{
 			printf("Veuillez entrer un nombre entre 1 et %d\n", i);
 		}
 
-	} while (select < 1 || select > i);
+	} while (atoi(select) < 1 || atoi(select) > i);
 
 
 	fclose(save);
@@ -305,7 +307,9 @@ void loadGame()
 			fclose(save);
 			break;
 		}
-	}	
+    }
+
+    time(&(partie->startTime));
 
 	game(partie);
 	
