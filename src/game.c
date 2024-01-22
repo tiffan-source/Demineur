@@ -347,7 +347,7 @@ Game *createGameFromSave(const char *saveLine)
 	if (newPlateau == NULL)
 		memoryError();
 
-	testAssign = sscanf(saveLine, "%d %d %d %f %s", &width, &height, &goal, &duree, caseData);
+	testAssign = sscanf(saveLine, "%d %d %d %lf %s", &width, &height, &goal, &duree, caseData);
 
 	newPlateau->grid = (Square **)malloc(sizeof(Square *) * height);
 	

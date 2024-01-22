@@ -174,7 +174,7 @@ void makeAction(Game *partie)
     int readResult;
 	int revealSquareState;
 
-	printf("Entrez une action (action X Y) ou Q pour retourner au menu\n");
+	printf("ENTREZ UNE ACTION (ACTION-X-Y) ou Q POUR RETOURNER AU MENU\n");
 	listeAction();
     // clearBuff();
 	fgets(allAction, 256, stdin);
@@ -183,8 +183,8 @@ void makeAction(Game *partie)
 
     while (!(readResult == 3 || action == 'Q' || action == 'S' || action == 'T'))
     {
-        printf("Entrez une action (action X Y) ou Q pour retourner au menu\n");
-        listeAction();
+        printf("ENTREZ UNE ACTION (ACTION-X-Y) ou Q POUR RETOURNER AU MENU\n");
+		listeAction();
         // clearBuff();
         fgets(allAction, 256, stdin);
         readResult = sscanf(allAction, "%c-%c-%d", &action, &coord1, &coord2);
@@ -257,13 +257,12 @@ void resolePlateau(Plateau *plateau)
 void listeAction()
 {
 	printf("Voici les differentes actions possibles\n");
-	printf("R: Afficher le vrai contenu des cases\n");
-	printf("F: Placer un Flag sur une case\n");
-	printf("S: Sauvegarder le jeux dans un fichier\n");
-	printf("T: Résoudre le jeux\n");
-	printf("Q: Quitter la partie\n");
+	printf("\tR: Révéler la case\n");
+	printf("\tF: Placer un Flag sur la case\n");
+	printf("\tS: Sauvegarder le jeux\n");
+	printf("\tT: Dévoiler le plateau\n");
+	printf("\tQ: Quitter la partie\n");
 
-	printf("Exemple: ");
+	printf("\tExemple: R-C-4\n");
 
-	printf("FC4\n");
 }

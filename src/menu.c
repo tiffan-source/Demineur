@@ -8,11 +8,11 @@
 void displayMenu()
 {
 	// system("clear");
-	printf("DEMINEUR Menu\n");
-	printf("CHOISISSEZ VOTRE OPTION\n");
-	printf("1) Nouvelle partie\n");
-	printf("2) Charger une partie\n");
-	printf("3) Quitter\n");
+	printf("\n* DEMINEUR MENU\n");
+	printf("\tCHOISISSEZ VOTRE OPTION\n");
+	printf("\t1) Nouvelle partie\n");
+	printf("\t2) Charger une partie\n");
+	printf("\t3) Quitter\n");
 }
 
 /**
