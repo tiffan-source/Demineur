@@ -174,6 +174,7 @@ void makeAction(Game *partie)
     int readResult;
 	int revealSquareState;
 
+
 	printf("ENTREZ UNE ACTION (ACTION-X-Y) ou Q POUR RETOURNER AU MENU\n");
 	listeAction();
     // clearBuff();
@@ -260,7 +261,6 @@ void listeAction()
 	printf("\tR: Révéler la case\n");
 	printf("\tF: Placer un Flag sur la case\n");
 	printf("\tS: Sauvegarder le jeux\n");
-	printf("\tT: Dévoiler le plateau\n");
 	printf("\tQ: Quitter la partie\n");
 
 	printf("\tExemple: R-C-4\n");

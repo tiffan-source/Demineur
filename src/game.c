@@ -57,11 +57,11 @@ void whatHappensAtEnd(Game *partie){
 	partie->duree += difftime(partie->endTime, partie->startTime);
 	tempsEcouleFormate = tempsEcoule(partie->duree);
 
-	destroyGame(partie);
 
     if (partie->state == WIN)
     {
         printf("Vous avez gagne en %s\n", tempsEcouleFormate);
+        writeStats(partie);
     }
     else if (partie->state == LOSE)
     {
@@ -74,9 +74,10 @@ void whatHappensAtEnd(Game *partie){
     else if (partie->state == ENDBYUSER)
     {
         printf("Partie terminee par l'utilisateur\n");
+
     }
-    
-    
+
+    destroyGame(partie);
 
 	free(tempsEcouleFormate);
 
@@ -268,10 +269,9 @@ int selectGame()
 
 	} while (atoi(select) < 1 || atoi(select) > i);
 
-
 	fclose(save);
 
-	return select;
+	return atoi(select);
 }
 
 
@@ -415,4 +415,41 @@ Game *createGameFromSave(const char *saveLine)
     newGame->duree = duree;
 
     return (newGame);
+}
+
+void writeStats(Game *partie)
+{
+    FILE *statsFile = NULL;
+    char *pwd = getenv("PWD");
+    char filePath[256];
+
+    sprintf(filePath, "%s/stats.txt", pwd);
+
+    statsFile = fopen(filePath, "a+");
+
+    printf("Entrez votre nom :\n");
+    fgets(partie->namePlayer, 256, stdin);
+
+    if (statsFile == NULL)
+    {
+        printf("Erreur lors de l'ouverture du fichier\n");
+        exit(1);
+    }
+
+    fprintf(statsFile, "%s %ds\n", partie->namePlayer, (int)partie->duree);
+
+    fclose(statsFile);
+}
+
+void displayStats(){
+    FILE *statsFile = NULL;
+    char *pwd = getenv("PWD");
+    char command[256];
+
+    sprintf(command, "cat %s/stats.txt", pwd);
+
+    system("clear");
+    system(command);
+
+    sleep(2);
 }

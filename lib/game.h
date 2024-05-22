@@ -13,7 +13,8 @@ struct Game
     int state;
     time_t startTime;
     time_t endTime;
-    double duree;    
+    double duree;
+    char namePlayer[256]; 
 };
 
 typedef struct Game Game;
@@ -26,6 +27,7 @@ int checkForLoose(Game *partie);
 void saveGame(Game *partie);
 void destroyGame(Game *partie);
 Game *createGameFromSave(const char *saveLine);
+void displayStats();
 
 
 #endif /* __GAME__H__ */

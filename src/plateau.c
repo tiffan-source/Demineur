@@ -9,6 +9,8 @@ void setCustomePlateauSettings(int *width, int *height)
     int validWidth = 0;
     int validHeight = 0;
 
+    system("clear");
+
     while (!validWidth)
     {
         printf("Veuillez choisir la largeur du plateau de jeu (1-26) :\n");
@@ -48,7 +50,7 @@ void setPlateauSettings(int *width, int *height)
 {
 	char choice[256];
 
-	// system("clear");
+	system("clear");
 
 	printf("\tVeuillez choisir la taille du plateau de jeu :\n");
 	printf("\t1 - Petit (Defaut) (%dx%d)\n", DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -184,7 +186,7 @@ void displayPlateau(Plateau *plateau)
 {
 	int i, j;
 
-	// system("clear");
+	system("clear");
 	
     printf("  ");
 

@@ -7,12 +7,13 @@
  */
 void displayMenu()
 {
-	// system("clear");
+	system("clear");
 	printf("\n* DEMINEUR MENU\n");
 	printf("\tCHOISISSEZ VOTRE OPTION\n");
 	printf("\t1) Nouvelle partie\n");
 	printf("\t2) Charger une partie\n");
 	printf("\t3) Quitter\n");
+    printf("\t4) Statistiques\n");
 }
 
 /**
@@ -44,9 +45,14 @@ int menu()
 		return (1);
 		break;
     
-        case '3':
+    case '3':
 		return (0);
 		break;
+
+    case '4':
+        displayStats();
+        return 1;
+        break;
 
 	default:
 		optionNotRecognized();
